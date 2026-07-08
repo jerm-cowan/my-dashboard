@@ -1,0 +1,180 @@
+```md
+# FastForward Logistics — Internal Operations Dashboard
+## Copilot Brief for Claude Sonnet 4.6
+
+---
+
+## 🧭 Project Context
+
+**Client:** FastForward Logistics (fictional)
+**Stakeholder:** VP of Operations
+**Use Case:** Internal leadership dashboard — displayed during executive meetings and used for daily ops monitoring
+**Engagement Type:** Prototype / Proof of Concept
+**Developer Stack:** Vanilla HTML, CSS, and JavaScript only — no frameworks, no component libraries
+
+> **AI Guidance:** Treat this as a real client engagement. Code should be clean, professional, and production-minded. Prioritize readability, maintainability, and realistic mock data. Every decision should feel like it was made for an actual logistics company, not a tutorial project.
+
+---
+
+## 📋 Summary
+
+Build a **single-page internal operations dashboard** for FastForward Logistics. The dashboard should give the VP of Operations an at-a-glance view of the business in real time — suitable for pulling up on a large screen during a leadership meeting.
+
+The dashboard must feel **credible and complete** — not a demo skeleton. Use realistic mock data with plausible logistics metrics. All data is static/mocked at this stage but should be structured so that a real API could replace it later.
+
+**Primary Goals:**
+- Display key operational KPIs clearly and confidently
+- Surface problems (exceptions, delays) without requiring the user to dig
+- Communicate regional performance across FastForward's operating zones
+- Be readable at a glance on a 1080p or 1440p screen
+
+---
+
+## ⚙️ Tech Specification
+
+### Stack
+- `index.html` — single HTML file, semantic and accessible
+- `styles.css` — external stylesheet, no inline styles except where dynamically applied via JS
+- `app.js` — all interactivity, data, and DOM logic
+- `data.js` — mock data file, separated for clean architecture and future API swap
+
+### File Structure
+```
+/fastforward-dashboard
+│
+├── index.html
+├── styles.css
+├── app.js
+└── data.js
+```
+
+### JavaScript Guidelines
+- Use **ES6+** syntax throughout (`const`, `let`, arrow functions, destructuring, template literals)
+- No jQuery, no external JS libraries
+- All mock data lives in `data.js` and is imported via ES module `type="module"`
+- DOM manipulation should be modular — write discrete render functions per section
+- Add **JSDoc comments** on all functions for clarity and Copilot context
+- Structure data so it could realistically be replaced with a `fetch()` call
+
+### HTML Guidelines
+- Use semantic HTML5 elements (`<main>`, `<section>`, `<header>`, `<nav>`, `<article>`)
+- Include ARIA labels on all interactive and data-display regions
+- Dashboard should be a **single scrollable page** with a fixed top navigation bar
+
+### CSS Guidelines
+- Use **CSS custom properties** (variables) for all colors, spacing, and typography
+- Use **CSS Grid** for the overall dashboard layout
+- Use **Flexbox** for component-level alignment
+- Mobile layout is not required but the layout should not break below 1024px
+- Include a **dark professional color scheme** appropriate for an ops/logistics brand
+
+---
+
+## 🎨 Design Direction
+
+### Visual Tone
+Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS. This is not a consumer product — it should feel like a tool built for professionals who trust data.
+
+### Color Palette (CSS Variables to Define)
+| Variable | Purpose | Suggested Value |
+|---|---|---|
+| `--color-bg` | Page background | `#0f1117` |
+| `--color-surface` | Card/panel background | `#1a1d27` |
+| `--color-border` | Subtle borders | `#2e3244` |
+| `--color-accent` | Brand accent / highlights | `#3b82f6` |
+| `--color-success` | On-time / positive | `#22c55e` |
+| `--color-warning` | At-risk / delayed | `#f59e0b` |
+| `--color-danger` | Exception / critical | `#ef4444` |
+| `--color-text-primary` | Main text | `#f1f5f9` |
+| `--color-text-muted` | Labels / secondary text | `#94a3b8` |
+
+### Typography
+- Font: **Inter** via Google Fonts
+- KPI numbers: large, bold, high contrast
+- Labels: uppercase, tracked, muted
+- Body/table text: regular weight, readable at small sizes
+
+### Layout Sections
+
+#### 1. 🔷 Top Navigation Bar (fixed)
+- FastForward Logistics logo (text-based wordmark is fine)
+- Dashboard title: *"Operations Dashboard"*
+- Live timestamp (updates every minute via JS)
+- Status pill: *"Live Data"* or *"Mock Data"* indicator
+
+#### 2. 📊 KPI Summary Row
+Four stat cards displayed in a horizontal row:
+
+| KPI | Mock Value | Status Logic |
+|---|---|---|
+| Total Shipments (MTD) | 4,821 | Neutral |
+| On-Time Delivery Rate | 91.4% | Green if ≥90%, Yellow if 80–89%, Red if <80% |
+| Open Exceptions | 38 | Red if >30, Yellow if 15–30, Green if <15 |
+| Avg Transit Time | 2.3 days | Neutral with trend indicator |
+
+#### 3. 🗺️ Regional Performance Table
+A styled HTML table showing performance by region:
+
+| Region | Shipments | On-Time % | Exceptions | Status |
+|---|---|---|---|---|
+| Northeast | 1,204 | 94.2% | 6 | 🟢 On Track |
+| Southeast | 987 | 88.7% | 11 | 🟡 At Risk |
+| Midwest | 1,103 | 92.1% | 7 | 🟢 On Track |
+| Southwest | 743 | 85.3% | 9 | 🟡 At Risk |
+| West Coast | 784 | 93.8% | 5 | 🟢 On Track |
+
+#### 4. ⚠️ Open Exceptions Feed
+A scrollable list/feed of active exceptions. Each item should show:
+- Exception ID (e.g. `EXC-00412`)
+- Shipment ID
+- Issue type (e.g. *Carrier Delay*, *Address Error*, *Customs Hold*, *Damaged Goods*)
+- Affected region
+- Time open (e.g. *"14 hrs"*)
+- Priority badge: `HIGH` / `MEDIUM` / `LOW`
+
+#### 5. 📈 Shipment Volume Trend (7-Day)
+A **pure CSS + JS bar chart** (no chart library) showing daily shipment volume for the past 7 days. Bars should be rendered dynamically from data. Include day labels and volume numbers above each bar.
+
+#### 6. 🚚 Carrier Performance Snapshot
+A small summary panel showing top 4 carriers:
+
+| Carrier | Shipments | On-Time % | Trend |
+|---|---|---|---|
+| FedEx Freight | 1,240 | 93.5% | ↑ |
+| XPO Logistics | 1,018 | 89.2% | → |
+| Old Dominion | 876 | 95.1% | ↑ |
+| Estes Express | 654 | 84.7% | ↓ |
+
+---
+
+## ✨ Nice-to-Haves
+
+These are stretch goals — implement only after core sections are complete and stable.
+
+- **Auto-refresh simulation** — mock a data refresh every 60 seconds with a subtle flash/pulse animation on KPI cards
+- **Exception filter** — a `<select>` dropdown to filter the exceptions feed by region or priority
+- **Collapsible sections** — allow each dashboard section to be collapsed/expanded via a toggle button
+- **Keyboard navigation** — full tab-through support for the exceptions feed and table rows
+- **Print / Export view** — a `window.print()` triggered button that applies a light-mode print stylesheet
+- **Tooltip on hover** — hovering a KPI card shows a small tooltip with a definition or calculation note
+- **Subtle entrance animations** — cards and rows animate in on load using CSS `@keyframes` with staggered delays
+- **Dark/light mode toggle** — a pill-style toggle button in the top navigation bar that switches between dark and light themes; preference should be persisted in `localStorage` and should respect the user's `prefers-color-scheme` system setting as the initial default; all color transitions should animate smoothly via CSS custom properties
+
+---
+
+## 🤖 Copilot Prompting Notes
+
+> These notes are instructions for how Claude Sonnet 4.6 should approach code generation in this project.
+
+- **Always write complete, working code** — no placeholder comments like `// add logic here`
+- **Do not suggest frameworks** — if a solution requires React, Vue, or a chart library, find a vanilla JS alternative
+- **Respect the file separation** — data stays in `data.js`, styles in `styles.css`, logic in `app.js`
+- **Be opinionated about quality** — if there's a more semantic or accessible way to write something, use it
+- **Mock data should feel real** — use realistic IDs, plausible numbers, and logistics-appropriate terminology
+- **Comment intentionally** — JSDoc on functions, inline comments only where logic is non-obvious
+
+---
+
+*Brief version 1.1 — FastForward Logistics Prototype Engagement*
+*Stack: HTML / CSS / JS — No frameworks — Claude Sonnet 4.6 / GitHub Copilot*
+```

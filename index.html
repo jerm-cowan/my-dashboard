@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FastForward Logistics internal operations dashboard — real-time shipment KPIs, regional performance, and exception tracking." />
+  <meta name="robots" content="noindex" />
+  <title>FastForward Logistics — Operations Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       Fixed Navigation Bar
+       ============================================================ -->
+  <header class="navbar" role="banner" aria-label="FastForward Logistics dashboard navigation">
+    <div class="navbar__brand">
+      <span class="navbar__logo" aria-label="FastForward Logistics">⚡ FastForward</span>
+      <span class="navbar__divider" aria-hidden="true"></span>
+      <span class="navbar__title">Operations Dashboard</span>
+    </div>
+
+    <div class="navbar__meta">
+      <span class="status-pill" aria-label="Data source: Mock Data">Mock Data</span>
+      <time class="navbar__timestamp" id="live-timestamp" aria-live="polite" aria-label="Current date and time"></time>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Toggle theme">
+        <span class="theme-toggle__icon" aria-hidden="true">☀️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Main Dashboard Content
+       ============================================================ -->
+  <main class="dashboard" id="main-content" role="main" aria-label="Operations Dashboard">
+
+    <!-- ── 1. KPI Summary Row ──────────────────────────────────── -->
+    <section class="dashboard__section" id="section-kpi" aria-labelledby="kpi-heading">
+      <div class="section-header">
+        <h2 class="section-title" id="kpi-heading">Key Performance Indicators</h2>
+        <button
+          class="section-toggle"
+          aria-expanded="true"
+          aria-controls="kpi-content"
+          data-section="kpi-content"
+          title="Collapse section"
+        >
+          <span aria-hidden="true">▾</span>
+        </button>
+      </div>
+      <div class="section-content" id="kpi-content">
+        <div class="kpi-grid" id="kpi-grid" role="list" aria-label="Key performance indicator summary cards">
+          <!-- Rendered by app.js → renderKpiCards() -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2 & 3. Regional Table + Exceptions Feed (2-col row) ── -->
+    <div class="dashboard__row">
+
+      <!-- Regional Performance Table -->
+      <section class="dashboard__section" id="section-regional" aria-labelledby="regional-heading">
+        <div class="section-header">
+          <h2 class="section-title" id="regional-heading">Regional Performance</h2>
+          <button
+            class="section-toggle"
+            aria-expanded="true"
+            aria-controls="regional-content"
+            data-section="regional-content"
+            title="Collapse section"
+          >
+            <span aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="section-content" id="regional-content">
+          <div class="table-wrapper" role="region" aria-label="Regional performance data">
+            <table class="data-table" id="regional-table" aria-label="Performance metrics by operating region">
+              <thead>
+                <tr>
+                  <th scope="col">Region</th>
+                  <th scope="col" class="col-num">Shipments</th>
+                  <th scope="col" class="col-num">On-Time %</th>
+                  <th scope="col" class="col-num">Exceptions</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="regional-tbody">
+                <!-- Rendered by app.js → renderRegionalTable() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Open Exceptions Feed -->
+      <section class="dashboard__section" id="section-exceptions" aria-labelledby="exceptions-heading">
+        <div class="section-header">
+          <h2 class="section-title" id="exceptions-heading">
+            Open Exceptions
+            <span class="section-title__count" id="exceptions-count" aria-live="polite"></span>
+          </h2>
+          <div class="section-header__actions">
+            <label for="exception-filter" class="sr-only">Filter exceptions by region or priority</label>
+            <select
+              class="filter-select"
+              id="exception-filter"
+              aria-label="Filter exceptions by region or priority"
+            >
+              <option value="all">All Exceptions</option>
+              <optgroup label="By Priority">
+                <option value="priority-HIGH">HIGH Priority</option>
+                <option value="priority-MEDIUM">MEDIUM Priority</option>
+                <option value="priority-LOW">LOW Priority</option>
+              </optgroup>
+              <optgroup label="By Region">
+                <option value="region-Northeast">Northeast</option>
+                <option value="region-Southeast">Southeast</option>
+                <option value="region-Midwest">Midwest</option>
+                <option value="region-Southwest">Southwest</option>
+                <option value="region-West Coast">West Coast</option>
+              </optgroup>
+            </select>
+            <button
+              class="section-toggle"
+              aria-expanded="true"
+              aria-controls="exceptions-content"
+              data-section="exceptions-content"
+              title="Collapse section"
+            >
+              <span aria-hidden="true">▾</span>
+            </button>
+          </div>
+        </div>
+        <div class="section-content" id="exceptions-content">
+          <div
+            class="exceptions-feed"
+            id="exceptions-feed"
+            role="feed"
+            aria-label="Open exceptions feed"
+            aria-live="polite"
+            aria-relevant="additions removals"
+          >
+            <!-- Rendered by app.js → renderExceptionsFeed() -->
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /.dashboard__row -->
+
+    <!-- ── 4. Shipment Volume Trend (7-Day Bar Chart) ──────────── -->
+    <section class="dashboard__section" id="section-trend" aria-labelledby="trend-heading">
+      <div class="section-header">
+        <h2 class="section-title" id="trend-heading">Shipment Volume — 7-Day Trend</h2>
+        <button
+          class="section-toggle"
+          aria-expanded="true"
+          aria-controls="trend-content"
+          data-section="trend-content"
+          title="Collapse section"
+        >
+          <span aria-hidden="true">▾</span>
+        </button>
+      </div>
+      <div class="section-content" id="trend-content">
+        <div
+          class="bar-chart"
+          id="volume-chart"
+          role="img"
+          aria-label="Bar chart: daily shipment volume for the past 7 days"
+        >
+          <!-- Rendered by app.js → renderVolumeChart() -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. Carrier Performance Snapshot ────────────────────── -->
+    <section class="dashboard__section" id="section-carriers" aria-labelledby="carriers-heading">
+      <div class="section-header">
+        <h2 class="section-title" id="carriers-heading">Carrier Performance</h2>
+        <button
+          class="section-toggle"
+          aria-expanded="true"
+          aria-controls="carriers-content"
+          data-section="carriers-content"
+          title="Collapse section"
+        >
+          <span aria-hidden="true">▾</span>
+        </button>
+      </div>
+      <div class="section-content" id="carriers-content">
+        <div class="carrier-grid" id="carrier-grid" role="list" aria-label="Carrier performance snapshot">
+          <!-- Rendered by app.js → renderCarrierCards() -->
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /.dashboard -->
+
+  <!-- Shared KPI tooltip (positioned via JS) -->
+  <div class="tooltip" id="kpi-tooltip" role="tooltip" aria-hidden="true"></div>
+
+  <!-- Fixed print/export button -->
+  <button class="print-btn" id="print-btn" aria-label="Print or export dashboard view">
+    <span aria-hidden="true">🖨</span> Export
+  </button>
+
+  <!--
+    NOTE: ES modules require an HTTP server to load correctly.
+    Run: python3 -m http.server 8080  (or use VS Code Live Server)
+    Then open: http://localhost:8080
+  -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
