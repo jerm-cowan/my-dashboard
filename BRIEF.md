@@ -109,7 +109,7 @@ Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS
 - Dashboard title: *"Operations Dashboard"*
 - Live timestamp (updates every minute via JS)
 - Status pill: *"Live Data"* or *"Mock Data"* indicator
-- Left align the logo and title, right align the timestamp and status pill, both to the width of the dashboard content area (not full browser width)
+- Left align the logo and title to the dashboard content area, and right align the timestamp and status pill (not browser width)
 
 #### 2. 📊 KPI Summary Row
 Four stat cards displayed in a horizontal row:
