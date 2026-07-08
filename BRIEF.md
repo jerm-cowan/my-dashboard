@@ -94,6 +94,7 @@ Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS
 - Use consistent **border-radius** for cards and buttons (e.g., 4px or 6px)
 - Maintain consistent **padding** inside cards and buttons (e.g., 8px, 16px, 24px) and ensure nested elements align.
 - Heading padding and nested content padding should match so items visually align across sections. Especially left and right padding.
+- Atomic elements like carets and icons should match and have similar padding inside their containers so they align with other icons. (ex. the sort caret in the exceptions feed should align with the search magnifying glass icon and the filter dropdown icon and with the section heading caret icon.)
 
 ### Typography
 - Font: **Inter** via Google Fonts
@@ -149,6 +150,7 @@ Add a search bar to filter the exceptions feed by any data point or text string.
 - search bar should have a placeholder text: "Search by" and a magnifying glass icon on the left side of the input field. The search bar should be styled to match the overall dashboard theme and should be positioned above the exceptions feed.
 
 Filter, sort, and search behavior and location:
+- Search bar, filter drop down, and sort dropddown should have consistent styling, container height.
 - These should all work together seamlessly. For example, if a user has filtered by region and then searches for a specific exception ID, the feed should only show results that match both the filter and the search query.
 - All components should be accessible via keyboard navigation and screen readers. Use appropriate ARIA attributes and roles to ensure that the feed is fully accessible.
 - All interface components should be below the heading of the section and above the feed itself in this order: search bar, filter dropdown, sort dropdown.

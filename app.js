@@ -379,13 +379,16 @@ function renderExceptionsFeed() {
     }
   }
 
-  // 2. Apply search query against ID, shipment ID, and issue type
+  // 2. Apply search query against all exception fields (case-insensitive)
   const query = search.trim().toLowerCase();
   if (query) {
     data = data.filter(e =>
       e.id.toLowerCase().includes(query) ||
       e.shipmentId.toLowerCase().includes(query) ||
-      e.type.toLowerCase().includes(query)
+      e.type.toLowerCase().includes(query) ||
+      e.region.toLowerCase().includes(query) ||
+      e.priority.toLowerCase().includes(query) ||
+      String(e.hoursOpen).includes(query)
     );
   }
 

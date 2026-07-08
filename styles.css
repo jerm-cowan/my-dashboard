@@ -262,8 +262,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  padding: var(--sp-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background-color: var(--color-surface-raised);
@@ -385,10 +384,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  padding: var(--sp-2);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: transparent;
   cursor: pointer;
   color: var(--color-text-muted);
@@ -696,12 +694,12 @@ body {
    ============================================================ */
 
 .filter-select {
-  padding: var(--sp-1) var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-family: var(--font-family);
   font-weight: 500;
   cursor: pointer;
@@ -741,7 +739,7 @@ body {
   gap: var(--sp-2);
   max-height: 440px;
   overflow-y: auto;
-  padding: var(--sp-4);
+  padding: var(--sp-4) var(--sp-6);
   scrollbar-width: thin;
   scrollbar-color: var(--color-scrollbar) transparent;
 }
@@ -854,7 +852,7 @@ body {
 .priority-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-xs);
   font-weight: 800;
@@ -881,7 +879,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-3) var(--sp-6);
   border-bottom: 1px solid var(--color-border-subtle);
   flex-wrap: wrap;
   transition: border-color var(--t-slow);
@@ -1051,7 +1049,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
-  padding: var(--sp-5);
+  padding: var(--sp-6);
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
