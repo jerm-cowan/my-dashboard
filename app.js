@@ -338,28 +338,79 @@ function renderRegionalTable() {
 }
 
 /* ============================================================
-   Exceptions Feed — Render
+   Exceptions Feed — State & Render
    ============================================================ */
 
 /**
- * Filters and renders the exceptions feed into #exceptions-feed.
- * Also updates the live exception count badge in the section title.
- * @param {string} [filterValue='all'] - 'all', 'priority-HIGH', 'region-Northeast', etc.
+ * Shared state for the exceptions feed controls.
+ * Mutated by filter, sort, and search event handlers; renderExceptionsFeed()
+ * always reads from this object so all three controls compose correctly.
+ * @type {{ filter: string, sort: string, search: string }}
  */
-function renderExceptionsFeed(filterValue = 'all') {
+const exceptionsState = {
+  filter: 'all',
+  sort:   'priority-time',
+  search: '',
+};
+
+/** Priority sort order map for the 'priority-time' sort. */
+const PRIORITY_ORDER = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+
+/**
+ * Applies current filter, search query, and sort order from `exceptionsState`
+ * to the exceptions dataset, then renders the result into #exceptions-feed.
+ * Also updates the live exception count badge in the section title.
+ */
+function renderExceptionsFeed() {
   const feed = document.getElementById('exceptions-feed');
   if (!feed) return;
 
-  // Apply filter
+  const { filter, sort, search } = exceptionsState;
   let data = [...exceptionsData];
-  if (filterValue !== 'all') {
-    if (filterValue.startsWith('priority-')) {
-      const priority = filterValue.slice('priority-'.length);
+
+  // 1. Apply dropdown filter (region or priority)
+  if (filter !== 'all') {
+    if (filter.startsWith('priority-')) {
+      const priority = filter.slice('priority-'.length);
       data = data.filter(e => e.priority === priority);
-    } else if (filterValue.startsWith('region-')) {
-      const region = filterValue.slice('region-'.length);
+    } else if (filter.startsWith('region-')) {
+      const region = filter.slice('region-'.length);
       data = data.filter(e => e.region === region);
     }
+  }
+
+  // 2. Apply search query against ID, shipment ID, and issue type
+  const query = search.trim().toLowerCase();
+  if (query) {
+    data = data.filter(e =>
+      e.id.toLowerCase().includes(query) ||
+      e.shipmentId.toLowerCase().includes(query) ||
+      e.type.toLowerCase().includes(query)
+    );
+  }
+
+  // 3. Apply sort
+  switch (sort) {
+    case 'priority-time':
+      // Primary: priority HIGH→MEDIUM→LOW. Secondary: time open longest first.
+      data.sort((a, b) => {
+        const pd = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+        return pd !== 0 ? pd : b.hoursOpen - a.hoursOpen;
+      });
+      break;
+    case 'id':
+      data.sort((a, b) => a.id.localeCompare(b.id));
+      break;
+    case 'shipment-id':
+      data.sort((a, b) => a.shipmentId.localeCompare(b.shipmentId));
+      break;
+    case 'region':
+      data.sort((a, b) => a.region.localeCompare(b.region));
+      break;
+    case 'time':
+      // Descending: longest open first
+      data.sort((a, b) => b.hoursOpen - a.hoursOpen);
+      break;
   }
 
   // Update count badge
@@ -370,7 +421,7 @@ function renderExceptionsFeed(filterValue = 'all') {
   }
 
   if (data.length === 0) {
-    feed.innerHTML = '<p class="exceptions-empty">No exceptions match the selected filter.</p>';
+    feed.innerHTML = '<p class="exceptions-empty">No exceptions match the current filter or search.</p>';
     return;
   }
 
@@ -517,16 +568,43 @@ function initSectionToggles() {
 }
 
 /* ============================================================
-   Exceptions Filter
+   Exceptions Controls — Filter, Sort, Search
    ============================================================ */
 
 /**
- * Binds the exception filter <select> to re-render the feed on change.
+ * Wires up the filter dropdown, sort dropdown, and search input for the
+ * exceptions feed. All three update `exceptionsState` and re-render.
  */
-function initExceptionFilter() {
-  const select = document.getElementById('exception-filter');
-  if (!select) return;
-  select.addEventListener('change', e => renderExceptionsFeed(e.target.value));
+function initExceptionsControls() {
+  const filterSelect = document.getElementById('exception-filter');
+  if (filterSelect) {
+    filterSelect.addEventListener('change', e => {
+      exceptionsState.filter = e.target.value;
+      renderExceptionsFeed();
+    });
+  }
+
+  const sortSelect = document.getElementById('exception-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', e => {
+      exceptionsState.sort = e.target.value;
+      renderExceptionsFeed();
+    });
+  }
+
+  const searchInput = document.getElementById('exceptions-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', e => {
+      exceptionsState.search = e.target.value;
+      renderExceptionsFeed();
+    });
+
+    // Clear search state when the browser clears the search input via the × button
+    searchInput.addEventListener('search', e => {
+      exceptionsState.search = e.target.value;
+      renderExceptionsFeed();
+    });
+  }
 }
 
 /* ============================================================
@@ -587,7 +665,7 @@ function init() {
 
   // Interactive features
   initSectionToggles();
-  initExceptionFilter();
+  initExceptionsControls();
   initAutoRefresh();
   initPrintButton();
 }

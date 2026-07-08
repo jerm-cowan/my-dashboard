@@ -705,10 +705,24 @@ body {
   font-family: var(--font-family);
   font-weight: 500;
   cursor: pointer;
+  /* Prevent selects from collapsing below their content */
+  max-width: 100%;
   transition:
     border-color var(--t-fast),
     background-color var(--t-slow),
     color var(--t-slow);
+}
+
+/* Sort dropdown: wide enough for its longest option "Sort by: Shipment ID (SHP-#####)" */
+#exception-sort {
+  min-width: 244px;
+  flex-shrink: 0;
+}
+
+/* Filter dropdown: wide enough for "All Exceptions" + optgroup options */
+#exception-filter {
+  min-width: 160px;
+  flex-shrink: 0;
 }
 
 .filter-select:hover {
@@ -860,6 +874,83 @@ body {
   text-align: center;
   color: var(--color-text-faint);
   font-size: var(--font-size-sm);
+}
+
+/* Controls row: search (flex-grow) → filter → sort, all in one line */
+.exceptions-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  flex-wrap: wrap;
+  transition: border-color var(--t-slow);
+}
+
+.exceptions-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 160px;
+}
+
+.exceptions-search__icon {
+  position: absolute;
+  left: var(--sp-3);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+  transition: color var(--t-slow);
+}
+
+.exceptions-search__input {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) calc(var(--sp-3) + 14px + var(--sp-2));
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  font-weight: 400;
+  line-height: 1.5;
+  transition:
+    border-color var(--t-fast),
+    background-color var(--t-slow),
+    color var(--t-slow);
+  /* Remove browser default search-input styling */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.exceptions-search__input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.exceptions-search__input:hover {
+  border-color: var(--color-border);
+}
+
+.exceptions-search__input:focus {
+  border-color: var(--color-accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-dim);
+}
+
+/* Hide the browser's built-in × clear button; we rely on the search event */
+.exceptions-search__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 14px 14px;
+  cursor: pointer;
+  opacity: 1;
 }
 
 /* ============================================================

@@ -88,6 +88,13 @@ Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS
 | `--color-text-primary` | Main text | `#f1f5f9` |
 | `--color-text-muted` | Labels / secondary text | `#94a3b8` |
 
+### Padding and alignment
+- Use a consistent **8px base spacing unit** (e.g., 8px, 16px, 24px, 32px)
+- Like components should align to a **12-column grid** with gutters
+- Use consistent **border-radius** for cards and buttons (e.g., 4px or 6px)
+- Maintain consistent **padding** inside cards and buttons (e.g., 8px, 16px, 24px) and ensure nested elements align.
+- Heading padding and nested content padding should match so items visually align across sections. Especially left and right padding.
+
 ### Typography
 - Font: **Inter** via Google Fonts
 - KPI numbers: large, bold, high contrast
@@ -132,8 +139,26 @@ A scrollable list/feed of active exceptions. Each item should show:
 - Time open (e.g. *"14 hrs"*)
 - Priority badge: `HIGH` / `MEDIUM` / `LOW`
 
+Add a sort functionality
+- Match the All Exceptions dropdown format and give label "Sort by: Priority & Time Open" as the default sort option
+    - This will sort by Priority (High → Low) and Time Open (Longest → Shortest) 
+- Additional Sort by options: exception ID (EXC-#####), Shipment ID (SHP-#####), region, or time open (descending).
+- Any instance of a lable "Longest → Shortest" should be labeled as "Descending" instead, and "Shortest → Longest" should be labeled as "Ascending".
+
+Add a search bar to filter the exceptions feed by any data point or text string. The search should be case-insensitive and update the feed in real time as the user types.
+- search bar should have a placeholder text: "Search by" and a magnifying glass icon on the left side of the input field. The search bar should be styled to match the overall dashboard theme and should be positioned above the exceptions feed.
+
+Filter, sort, and search behavior and location:
+- These should all work together seamlessly. For example, if a user has filtered by region and then searches for a specific exception ID, the feed should only show results that match both the filter and the search query.
+- All components should be accessible via keyboard navigation and screen readers. Use appropriate ARIA attributes and roles to ensure that the feed is fully accessible.
+- All interface components should be below the heading of the section and above the feed itself in this order: search bar, filter dropdown, sort dropdown.
+- Adjust width of the dropdowns to accommodate the longest option text without truncation or wrapping. Ensure that the dropdowns are aligned with each other and with the search bar.
+
+
+
 #### 5. 📈 Shipment Volume Trend (7-Day)
 A **pure CSS + JS bar chart** (no chart library) showing daily shipment volume for the past 7 days. Bars should be rendered dynamically from data. Include day labels and volume numbers above each bar.
+
 
 #### 6. 🚚 Carrier Performance Snapshot
 A small summary panel showing top 4 carriers:
