@@ -316,6 +316,15 @@ body {
   gap: var(--section-gap);
 }
 
+/*
+  Single-column fallback: applied by JS when exactly one section in the row is
+  collapsed. The expanded section fills the full row width; the collapsed section
+  (just its header) stacks above or below it naturally.
+*/
+.dashboard__row--single {
+  grid-template-columns: 1fr;
+}
+
 /* ============================================================
    6. Section Card Wrapper
    ============================================================ */

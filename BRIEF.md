@@ -109,6 +109,7 @@ Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS
 - Dashboard title: *"Operations Dashboard"*
 - Live timestamp (updates every minute via JS)
 - Status pill: *"Live Data"* or *"Mock Data"* indicator
+- Left align the logo and title, right align the timestamp and status pill, both to the width of the dashboard content area (not full browser width)
 
 #### 2. 📊 KPI Summary Row
 Four stat cards displayed in a horizontal row:
@@ -130,6 +131,13 @@ A styled HTML table showing performance by region:
 | Midwest | 1,103 | 92.1% | 7 | 🟢 On Track |
 | Southwest | 743 | 85.3% | 9 | 🟡 At Risk |
 | West Coast | 784 | 93.8% | 5 | 🟢 On Track |
+
+Expandable/collapsible behavior on sections with 2 columnn layout in a row:
+- The expand/collapse caret should point to the left on the left column section and point right on right column section.
+- Expanding collapse the section but to the left for the left column and to the right for the right column section, filling the height to match the other column section. The expanded section should have a subtle shadow to indicate it is above the other section.
+- collapsed sections shoul dhave the caret pointing back to the inside and the label should rotate 90 degrees to be vertical and read from bottom to top. The label should be positioned centered like before and the padding remain the same. It is simply rotating 90 degrees.
+- The caret should be a be a positioned in centered wiht the label to appear as a side drawer style toggle.
+- The remaining column should expand to fill the remaining width of the row and maintain the same height as the expanded section. The expanded section should have a subtle shadow to indicate it is above the other section.
 
 #### 4. ⚠️ Open Exceptions Feed
 A scrollable list/feed of active exceptions. Each item should show:

@@ -552,8 +552,27 @@ function renderCarrierCards() {
    ============================================================ */
 
 /**
+ * Syncs the grid layout of a .dashboard__row after one of its children is toggled.
+ * - Both expanded  → standard 2-column layout (1fr 1fr)
+ * - One collapsed  → single-column layout so the expanded section fills full width
+ * - Both collapsed → 2-column layout (two compact side-by-side headers look clean)
+ * @param {HTMLElement} row - The .dashboard__row element to update
+ */
+function syncRowLayout(row) {
+  const sections  = [...row.querySelectorAll(':scope > .dashboard__section')];
+  const collapsed = sections.map(s =>
+    s.querySelector('.section-content')?.classList.contains('section-content--collapsed') ?? false
+  );
+  const allExpanded  = collapsed.every(c => !c);
+  const allCollapsed = collapsed.every(c =>  c);
+  // Switch to single-column only when exactly one side is collapsed
+  row.classList.toggle('dashboard__row--single', !allExpanded && !allCollapsed);
+}
+
+/**
  * Wires up all .section-toggle buttons to collapse/expand their target sections.
  * Uses the data-section attribute to find the controlled content element.
+ * For sections inside .dashboard__row, also syncs the row's grid layout.
  */
 function initSectionToggles() {
   document.querySelectorAll('.section-toggle').forEach(btn => {
@@ -566,6 +585,10 @@ function initSectionToggles() {
       btn.setAttribute('aria-expanded', String(!isExpanded));
       btn.title = isExpanded ? 'Expand section' : 'Collapse section';
       content.classList.toggle('section-content--collapsed', isExpanded);
+
+      // Adjust the parent row grid when this section lives in a two-column row
+      const row = content.closest('.dashboard__row');
+      if (row) syncRowLayout(row);
     });
   });
 }
