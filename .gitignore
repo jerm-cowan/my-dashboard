@@ -1,0 +1,17 @@
+# Compiled output
+dist/
+dist-ssr/
+
+# Dependencies
+node_modules/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.DS_Store
+.vscode/extensions.json

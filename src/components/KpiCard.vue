@@ -1,0 +1,73 @@
+<template>
+  <article
+    class="kpi-card animate-in"
+    :class="[`kpi-card--${status}`, { 'kpi-card--refreshing': refreshing }]"
+    :style="{ '--delay': `${delay}s` }"
+    role="listitem"
+    tabindex="0"
+    :data-kpi="kpiKey"
+    :aria-label="`${label}: ${formattedValue}`"
+    @mouseenter="$emit('show-tooltip', ($el as HTMLElement), tooltipText)"
+    @mouseleave="$emit('hide-tooltip')"
+    @focus="$emit('show-tooltip', ($el as HTMLElement), tooltipText)"
+    @blur="$emit('hide-tooltip')"
+  >
+    <span class="kpi-card__label">{{ label }}</span>
+    <div class="kpi-card__value-row">
+      <span class="kpi-card__value">{{ formattedValue }}</span>
+      <span
+        v-if="status !== 'neutral'"
+        class="kpi-card__dot"
+        :class="`status-dot--${status}`"
+        aria-hidden="true"
+      ></span>
+      <span
+        v-if="trend"
+        class="kpi-trend"
+        :class="`trend--${trend}`"
+        :aria-label="`Trend: ${trendLabel}`"
+      >{{ trendIcon }}</span>
+    </div>
+    <span class="kpi-card__sublabel">{{ sublabel }}</span>
+    <div class="kpi-card__accent-bar" aria-hidden="true"></div>
+  </article>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps<{
+  kpiKey: string
+  label: string
+  sublabel: string
+  value: number
+  status: 'success' | 'warning' | 'danger' | 'neutral'
+  trend?: 'up' | 'down' | 'flat'
+  delay: number
+  refreshing: boolean
+  tooltipText: string
+}>()
+
+defineEmits<{
+  'show-tooltip': [el: HTMLElement, text: string]
+  'hide-tooltip': []
+}>()
+
+/** Formats a raw KPI value into its display string. */
+const formattedValue = computed(() => {
+  if (props.kpiKey === 'totalShipmentsMTD') return props.value.toLocaleString()
+  if (props.kpiKey === 'onTimeDeliveryRate') return `${props.value}%`
+  if (props.kpiKey === 'avgTransitTime') return `${props.value} days`
+  return String(props.value)
+})
+
+const trendIcon = computed(() => {
+  const icons: Record<string, string> = { up: '↑', down: '↓', flat: '→' }
+  return props.trend ? (icons[props.trend] ?? '') : ''
+})
+
+const trendLabel = computed(() => {
+  const labels: Record<string, string> = { up: 'improving', down: 'declining', flat: 'stable' }
+  return props.trend ? (labels[props.trend] ?? props.trend) : ''
+})
+</script>

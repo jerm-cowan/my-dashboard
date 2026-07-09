@@ -10,7 +10,32 @@
 **Stakeholder:** VP of Operations
 **Use Case:** Internal leadership dashboard — displayed during executive meetings and used for daily ops monitoring
 **Engagement Type:** Prototype / Proof of Concept
-**Developer Stack:** Vanilla HTML, CSS, and JavaScript only — no frameworks, no component libraries
+**Developer Stack:** Vue 3, Vite, TypeScript, and Vue Router. No component libraries at this stage (Vuetify and other libraries will be evaluated during future iterations).
+
+### Framework Upgrade
+
+This project originally began as a vanilla HTML/CSS/JavaScript prototype during Step 2.1 to validate the dashboard concept and establish the initial BRIEF.md structure.
+
+During Step 2.2, the project transitions to Vue 3 using Vite, TypeScript, and Vue Router. The goal is to retain all existing dashboard requirements while moving to a component-based architecture that can support future enhancements.
+
+**Step 2.2 is complete.** The legacy vanilla files (`app.js`, `data.js`, `styles.css`) remain in the repository root as a historical reference for the v201 tag. All active development now lives in `src/`.
+
+### Vue Project Setup Requirements
+
+Create a new Vue project using the create-vue scaffolding tool with Vite.
+
+Enable:
+- TypeScript
+- Vue Router
+
+Disable:
+- Pinia
+- Testing
+- JSX
+- ESLint
+- Prettier
+
+Run all setup commands in the terminal and scaffold the project structure automatically.
 
 > **AI Guidance:** Treat this as a real client engagement. Code should be clean, professional, and production-minded. Prioritize readability, maintainability, and realistic mock data. Every decision should feel like it was made for an actual logistics company, not a tutorial project.
 
@@ -33,26 +58,52 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 ## ⚙️ Tech Specification
 
 ### Stack
-- `index.html` — single HTML file, semantic and accessible
-- `styles.css` — external stylesheet, no inline styles except where dynamically applied via JS
-- `app.js` — all interactivity, data, and DOM logic
-- `data.js` — mock data file, separated for clean architecture and future API swap
+
+- Vue 3
+- Vite
+- TypeScript
+- Vue Router
+
+### Expected Project Structure
+
+/src
+├── components/
+├── views/
+├── router/
+├── data/
+├── assets/
+├── App.vue
+└── main.ts
 
 ### File Structure
 ```
 /fastforward-dashboard
+
+├── src
+│   ├── components
+│   ├── views
+│   ├── router
+│   ├── data
+│   ├── assets
+│   ├── App.vue
+│   └── main.ts
 │
+├── public
 ├── index.html
-├── styles.css
-├── app.js
-└── data.js
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
 ```
 
-### JavaScript Guidelines
+### Vue and TypeScript Guidelines
 - Use **ES6+** syntax throughout (`const`, `let`, arrow functions, destructuring, template literals)
-- No jQuery, no external JS libraries
 - All mock data lives in `data.js` and is imported via ES module `type="module"`
-- DOM manipulation should be modular — write discrete render functions per section
+- Use TypeScript throughout the application
+- Prefer Composition API and <script setup>
+- Create reusable Vue components where appropriate
+- Use Vue Router for application routing even if the initial dashboard is primarily a single view
+- Keep mock data separate from presentation logic
+- Structure components so future Vuetify migration is possible
 - Add **JSDoc comments** on all functions for clarity and Copilot context
 - Structure data so it could realistically be replaced with a `fetch()` call
 
@@ -202,7 +253,9 @@ These are stretch goals — implement only after core sections are complete and 
 > These notes are instructions for how Claude Sonnet 4.6 should approach code generation in this project.
 
 - **Always write complete, working code** — no placeholder comments like `// add logic here`
-- **Do not suggest frameworks** — if a solution requires React, Vue, or a chart library, find a vanilla JS alternative
+- Use Vue-first solutions before suggesting external libraries
+- Avoid component libraries during Step 2.2
+- Maintain compatibility with a future Vuetify migration during Step 2.3
 - **Respect the file separation** — data stays in `data.js`, styles in `styles.css`, logic in `app.js`
 - **Be opinionated about quality** — if there's a more semantic or accessible way to write something, use it
 - **Mock data should feel real** — use realistic IDs, plausible numbers, and logistics-appropriate terminology
