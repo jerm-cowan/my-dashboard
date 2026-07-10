@@ -36,7 +36,7 @@ export const kpiData: KpiData = metrics.kpi as KpiData
  * Display metadata for each KPI card: label, sublabel, and value format type.
  * Consumed by KpiGrid to build card definitions without hardcoding strings.
  */
-export const kpiMeta: Record<string, KpiMetaEntry> = metrics.kpiMeta
+export const kpiMeta: Record<string, KpiMetaEntry> = metrics.kpiMeta as Record<string, KpiMetaEntry>
 
 /** Tooltip definitions shown on KPI card hover/focus. */
 export const kpiTooltips: Record<string, string> = metrics.kpiTooltips
