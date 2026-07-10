@@ -186,8 +186,8 @@ A styled HTML table showing performance by region:
 Expandable/collapsible behavior on sections with 2 columnn layout in a row:
 - The expand/collapse caret should point to the left on the left column section and point right on right column section.
 - Expanding collapse the section but to the left for the left column and to the right for the right column section, filling the height to match the other column section. The expanded section should have a subtle shadow to indicate it is above the other section.
-- collapsed sections shoul dhave the caret pointing back to the inside and the label should rotate 90 degrees to be vertical and read from bottom to top. The label should be positioned centered like before and the padding remain the same. It is simply rotating 90 degrees.
-- The caret should be a be a positioned in centered wiht the label to appear as a side drawer style toggle.
+- collapsed sections should have the caret pointing back to the inside and the label should rotate 90 degrees to be vertical and read from bottom to top. The label should be positioned centered like before and the padding remain the same. It is simply rotating 90 degrees.
+- The caret should be a be a positioned in centerthe label to appear as a side drawer style toggle and appear above the label. Ensure the posisition relative to the corner of the section and the label is consistent for both left and right column sections, and with same padding and spacing. For example, if the left column is expanded and the right column collapsed, the carets should align and have consistent spacing in their sections.
 - The remaining column should expand to fill the remaining width of the row and maintain the same height as the expanded section. The expanded section should have a subtle shadow to indicate it is above the other section.
 
 #### 4. ⚠️ Open Exceptions Feed
@@ -239,7 +239,7 @@ These are stretch goals — implement only after core sections are complete and 
 
 - **Auto-refresh simulation** — mock a data refresh every 60 seconds with a subtle flash/pulse animation on KPI cards
 - **Exception filter** — a `<select>` dropdown to filter the exceptions feed by region or priority
-- **Collapsible sections** — allow each dashboard section to be collapsed/expanded via a toggle button
+- **Collapsible sections** — allow each dashboard section to be collapsed/expanded via a toggle button. Icons should rotate 90 degrees with state changes. (down is expanded, up is collapsed for full width sections.)
 - **Keyboard navigation** — full tab-through support for the exceptions feed and table rows
 - **Print / Export view** — a `window.print()` triggered button that applies a light-mode print stylesheet
 - **Tooltip on hover** — hovering a KPI card shows a small tooltip with a definition or calculation note

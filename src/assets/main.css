@@ -325,15 +325,25 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--section-gap);
+  align-items: stretch;
+  /* Animate column width changes when a drawer panel opens/closes */
+  transition: grid-template-columns var(--t-slow);
 }
 
 /*
-  Single-column fallback: applied by JS when exactly one section in the row is
-  collapsed. The expanded section fills the full row width; the collapsed section
-  (just its header) stacks above or below it naturally.
+  Drawer layout — left panel collapsed:
+  Left section shrinks to a 52px vertical strip; right section fills the row.
 */
-.dashboard__row--single {
-  grid-template-columns: 1fr;
+.dashboard__row--left-collapsed {
+  grid-template-columns: 52px 1fr;
+}
+
+/*
+  Drawer layout — right panel collapsed:
+  Right section shrinks to a 52px vertical strip; left section fills the row.
+*/
+.dashboard__row--right-collapsed {
+  grid-template-columns: 1fr 52px;
 }
 
 /* ============================================================
@@ -435,8 +445,9 @@ body {
   transition: transform var(--t-base);
 }
 
+/* Full-width sections: collapsed = caret points up (▴), expanded = points down (▾) */
 .section-toggle[aria-expanded="false"] span {
-  transform: rotate(-90deg);
+  transform: rotate(180deg);
 }
 
 /* Collapsible content */
@@ -448,6 +459,75 @@ body {
 
 .section-content--collapsed {
   max-height: 0;
+}
+
+/* ── Row section: caret direction overrides ─────────────────────────────────
+   Left panel (Regional): expanded = caret points LEFT; collapsed = points RIGHT (inward).
+   Right panel (Exceptions): expanded = caret points RIGHT; collapsed = points LEFT (inward).
+   ▾ rotated  90deg CW = ◂ (left)
+   ▾ rotated -90deg CCW = ▸ (right)
+   These rules have higher specificity than the generic .section-toggle rules above.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.dashboard__row > .dashboard__section:first-child .section-toggle span {
+  transform: rotate(90deg); /* expanded: ◂ points left */
+}
+.dashboard__row > .dashboard__section:first-child .section-toggle[aria-expanded="false"] span {
+  transform: rotate(-90deg); /* collapsed: ▸ points right (inward) */
+}
+
+.dashboard__row > .dashboard__section:last-child .section-toggle span {
+  transform: rotate(-90deg); /* expanded: ▸ points right */
+}
+.dashboard__row > .dashboard__section:last-child .section-toggle[aria-expanded="false"] span {
+  transform: rotate(90deg); /* collapsed: ◂ points left (inward) */
+}
+
+/* ── Drawer strip: collapsed panel becomes a narrow vertical tab ────────────
+   The collapsed section fills the full row height (via CSS Grid stretch).
+   Its header rotates to display the section title vertically, bottom-to-top.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.dashboard__row--left-collapsed > .dashboard__section:first-child .section-header,
+.dashboard__row--right-collapsed > .dashboard__section:last-child .section-header {
+  /* Fill the full stretched height of the grid row */
+  height: 100%;
+  /* Caret above label: column-reverse puts DOM-last (.section-toggle) at top */
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  /* Remove horizontal separator — section border already frames the strip */
+  border-bottom: none;
+  /* Compact horizontal padding for the narrow strip */
+  padding: var(--sp-6) var(--sp-2);
+}
+
+.dashboard__row--left-collapsed > .dashboard__section:first-child .section-title,
+.dashboard__row--right-collapsed > .dashboard__section:last-child .section-title {
+  /* Rotate text to read bottom-to-top (vertical-rl + 180deg = bottom-to-top) */
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  /* Remove horizontal gap — layout is now vertical */
+  gap: 0;
+}
+
+/* The live count badge doesn't render well in a narrow strip — hide it */
+.dashboard__row--right-collapsed > .dashboard__section:last-child .section-title__count {
+  display: none;
+}
+
+/* ── Expanded panel elevation ───────────────────────────────────────────────
+   The expanded panel in the pair gets a raised shadow to visually sit above
+   the collapsed drawer strip, emphasising it as the active surface.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.dashboard__row--left-collapsed > .dashboard__section:last-child,
+.dashboard__row--right-collapsed > .dashboard__section:first-child {
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--shadow-raised);
 }
 
 /* ============================================================
@@ -1239,7 +1319,8 @@ body {
    ============================================================ */
 
 @media (max-width: 1280px) {
-  .dashboard__row {
+  /* Stack the row when neither drawer modifier is active */
+  .dashboard__row:not(.dashboard__row--left-collapsed):not(.dashboard__row--right-collapsed) {
     grid-template-columns: 1fr;
   }
 

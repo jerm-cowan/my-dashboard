@@ -8,7 +8,7 @@
     <!-- Two-column row: Regional Performance (left) + Open Exceptions (right) -->
     <div
       class="dashboard__row"
-      :class="{ 'dashboard__row--single': rowIsSingle }"
+      :class="rowClass"
     >
       <RegionalTable v-model:expanded="regionalExpanded" />
       <ExceptionsFeed v-model:expanded="exceptionsExpanded" />
@@ -45,12 +45,15 @@ const regionalExpanded = ref(true)
 const exceptionsExpanded = ref(true)
 
 /**
- * Row switches to single-column layout when exactly one section is collapsed,
- * allowing the expanded section to fill the full row width.
+ * Returns the drawer modifier class for the 2-column row based on which panel
+ * is collapsed. When neither or both are collapsed, no modifier is applied and
+ * the row uses the default 1fr/1fr split.
  */
-const rowIsSingle = computed(
-  () => regionalExpanded.value !== exceptionsExpanded.value,
-)
+const rowClass = computed(() => {
+  if (!regionalExpanded.value && exceptionsExpanded.value) return 'dashboard__row--left-collapsed'
+  if (regionalExpanded.value && !exceptionsExpanded.value) return 'dashboard__row--right-collapsed'
+  return ''
+})
 
 /** Triggers the browser print/export dialog. */
 function printDashboard() {
