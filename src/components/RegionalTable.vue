@@ -8,7 +8,7 @@
       <h2 class="section-title" id="regional-heading">Regional Performance</h2>
       <button
         class="section-toggle"
-        :aria-expanded="expanded.toString()"
+        :aria-expanded="expanded"
         :title="expanded ? 'Collapse section' : 'Expand section'"
         @click="$emit('update:expanded', !expanded)"
       >

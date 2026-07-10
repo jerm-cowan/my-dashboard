@@ -4,7 +4,7 @@
       <h2 class="section-title" id="trend-heading">Shipment Volume — 7-Day Trend</h2>
       <button
         class="section-toggle"
-        :aria-expanded="isExpanded.toString()"
+        :aria-expanded="isExpanded"
         :title="isExpanded ? 'Collapse section' : 'Expand section'"
         @click="isExpanded = !isExpanded"
       >

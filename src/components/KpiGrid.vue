@@ -4,7 +4,7 @@
       <h2 class="section-title" id="kpi-heading">Key Performance Indicators</h2>
       <button
         class="section-toggle"
-        :aria-expanded="isExpanded.toString()"
+        :aria-expanded="isExpanded"
         :title="isExpanded ? 'Collapse section' : 'Expand section'"
         @click="isExpanded = !isExpanded"
       >
@@ -36,7 +36,7 @@
         class="tooltip"
         :class="{ 'tooltip--visible': tooltip.visible }"
         role="tooltip"
-        :aria-hidden="(!tooltip.visible).toString()"
+        :aria-hidden="!tooltip.visible"
         :style="{ top: `${tooltip.top}px`, left: `${tooltip.left}px` }"
       >
         {{ tooltip.text }}
