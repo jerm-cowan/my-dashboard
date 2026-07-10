@@ -211,12 +211,17 @@ const filteredData = computed((): Exception[] => {
   return data
 })
 
-/** Maps a priority value to its Vuetify color name. */
+/** Maps a priority value to its Vuetify color name.
+ *  LOW uses the default/secondary neutral rather than 'success' (green).
+ *  Green means "healthy / no problem" elsewhere in the dashboard; LOW
+ *  exceptions are still open issues — just less urgent — so a muted neutral
+ *  avoids the false-positive signal that green would create.
+ */
 function priorityColor(priority: string): string {
   const map: Record<string, string> = {
     HIGH: 'error',
     MEDIUM: 'warning',
-    LOW: 'success',
+    LOW: 'secondary',
   }
   return map[priority] ?? 'secondary'
 }

@@ -301,10 +301,10 @@ body {
   gap: var(--section-gap) !important;
   align-items: stretch;
   /*
-    Explicit height so both sections match and the exceptions feed can use
-    flex-fill to scroll within the bounded space, mirroring the old build.
+    No fixed height here — the Exceptions section card owns the height at
+    ≥1280px (see the @media (min-width: 1280px) block below). This lets the
+    row collapse naturally when sections are collapsed.
   */
-  height: 500px;
 }
 
 /*
@@ -373,8 +373,18 @@ body {
   bottom: var(--sp-6) !important;
   right: var(--sp-6) !important;
   z-index: 100;
+  /* Restore side padding stripped by the global CSS reset */
+  padding-inline: var(--sp-5) !important;
 }
 
+/*
+  Vuetify renders prepend-icon inside .v-btn__prepend. The global margin:0
+  reset removes the default gap between the icon and the label text.
+  margin-inline-end is the Vuetify-standard logical property for this gap.
+*/
+.print-fab .v-btn__prepend {
+  margin-inline-end: var(--sp-2) !important;
+}
 
 
 /* ============================================================
@@ -503,6 +513,19 @@ body {
    Gated to ≥1280px so stacked sections use the standard up/down caret.
    ──────────────────────────────────────────────────────────────────────────── */
 @media (min-width: 1280px) {
+  /*
+    Give the Exceptions section card an explicit height so the feed can scroll
+    within a bounded space. This also drives the row height (Regional stretches
+    to match via align-items: stretch on .dashboard__row). Moving the height
+    here (instead of on the row) means the row collapses naturally when sections
+    are collapsed — the :has(.section-content--collapsed) overrides below
+    switch the card to height: auto, letting the row shrink.
+    Specificity: (0,2,0) — intentionally lower than the collapsed overrides
+    (0,3,0) so they always win when a section is collapsed.
+  */
+  .dashboard__col-right .dashboard__section {
+    height: 500px !important;
+  }
   .dashboard__row .dashboard__col-left .section-toggle span {
     transform: rotate(90deg); /* expanded: ◂ points left */
   }
@@ -550,6 +573,27 @@ body {
     z-index: 1;
     box-shadow: var(--shadow-raised);
   }
+
+  /*
+    Collapsed section cards: shrink to just the header instead of keeping the
+    full row height from the Vuetify inline style="height: 100%".
+    Specificity: 2 classes + :has(1 class) = (0,3,0).
+  */
+  .dashboard__col-left .dashboard__section:has(.section-content--collapsed),
+  .dashboard__col-right .dashboard__section:has(.section-content--collapsed) {
+    height: auto !important;
+  }
+
+  /*
+    Drawer-strip exception: when a panel IS the 52px collapsed strip the
+    section card must fill the full column height so the rotated title is
+    visible. This rule has the same specificity as the one above (0,3,0) but
+    is placed later, so source order makes it win for the drawer state.
+  */
+  .dashboard__row--left-collapsed .dashboard__col-left .dashboard__section,
+  .dashboard__row--right-collapsed .dashboard__col-right .dashboard__section {
+    height: 100% !important;
+  }
 }
 
 /* ============================================================
@@ -583,6 +627,12 @@ body {
   */
   display: flex !important;
   flex-direction: column !important;
+  /*
+    CSS Grid stretches all v-col siblings to the tallest row height, but the
+    v-card inside each col only sizes to its own content without height: 100%.
+    This makes every card fill its grid cell so all cards match the tallest.
+  */
+  height: 100%;
   gap: var(--sp-2);
   padding: var(--sp-6) !important;
   background-color: var(--color-surface-raised) !important;
@@ -1198,12 +1248,25 @@ body {
 .carrier-stat-value--danger  { color: var(--color-danger);  }
 .carrier-stat-value--neutral { color: var(--color-text-primary); }
 
+/* Inline row: on-time % and trend arrow sit on the same baseline */
+.carrier-ontime-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+/*
+  Trend arrow is now inline next to the on-time % value.
+  Sized slightly smaller than the value so it reads as a modifier.
+  Color is applied via carrier-stat-value--{status} (matches the rate),
+  so the arrow always shares the semantic meaning of the number beside it:
+  orange rate → orange arrow, green rate → green arrow.
+*/
 .carrier-trend {
-  margin-left: auto;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-md);
   font-weight: 800;
   line-height: 1;
-  align-self: center;
+  flex-shrink: 0;
 }
 
 /* ============================================================
@@ -1370,10 +1433,7 @@ body {
     font-size: var(--font-size-base);
   }
 
-  /* Carrier trend arrow: scale down */
-  .carrier-trend {
-    font-size: var(--font-size-xl);
-  }
+  /* Carrier trend arrow is now inline — no separate size override needed */
 }
 
 @media (max-width: 600px) {

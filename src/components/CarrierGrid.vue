@@ -45,16 +45,18 @@
               </div>
               <div class="carrier-card__stat">
                 <span class="carrier-stat-label">On-Time</span>
-                <span
-                  class="carrier-stat-value"
-                  :class="`carrier-stat-value--${onTimeRateStatus(carrier.onTimeRate)}`"
-                >{{ carrier.onTimeRate }}%</span>
+                <div class="carrier-ontime-row">
+                  <span
+                    class="carrier-stat-value"
+                    :class="`carrier-stat-value--${onTimeRateStatus(carrier.onTimeRate)}`"
+                  >{{ carrier.onTimeRate }}%</span>
+                  <span
+                    class="carrier-trend"
+                    :class="`carrier-stat-value--${onTimeRateStatus(carrier.onTimeRate)}`"
+                    :aria-label="`Trend: ${trendLabel(carrier.trend)}`"
+                  >{{ trendIcon(carrier.trend) }}</span>
+                </div>
               </div>
-              <span
-                class="carrier-trend"
-                :class="`trend--${carrier.trend}`"
-                :aria-label="`Trend: ${trendLabel(carrier.trend)}`"
-              >{{ trendIcon(carrier.trend) }}</span>
             </div>
           </v-card>
         </v-col>
