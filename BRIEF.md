@@ -3,7 +3,7 @@
 
 ---
 
-## 🧭 Project Context
+## � Project Context
 
 **Client:** FastForward Logistics (fictional)
 **Stakeholder:** VP of Operations
@@ -19,6 +19,9 @@ This project originally began as a vanilla HTML/CSS/JavaScript prototype during 
 During Step 2.2, the project transitions to Vue 3 using Vite, TypeScript, and Vue Router. The goal is to retain all existing dashboard requirements while moving to a component-based architecture that can support future enhancements.
 
 All active development now lives in `src/`.
+
+> **📌 Data in this document is illustrative.**
+> Tables and sample values in this brief exist to communicate *intent and shape* — what fields exist, what realistic values look like, and what status logic applies. They are **not a data source**. No code reads this file. The live mock dataset lives exclusively in `src/data/metrics.json`, which is imported by `src/data/index.ts` and consumed by components. To change a displayed value, update `metrics.json` — not this document.
 
 ### Vue Project Setup Requirements
 
@@ -100,6 +103,8 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 ### Vue and TypeScript Guidelines
 - Use **ES6+** syntax throughout (`const`, `let`, arrow functions, destructuring, template literals)
 - Mock data lives in `src/data/`
+- All mock values must be defined in **`src/data/metrics.json`** — a single JSON file that acts as the fake API response. This file is the sole source of truth for all dashboard data and must be structured so that a real `fetch()` call to an API endpoint could replace it without changing any component code.
+- `src/data/index.ts` imports from `metrics.json`, applies TypeScript types, derives computed config (thresholds, KPI card metadata, app config), and re-exports everything components need. Components must never import from `metrics.json` directly.
 - Prefer Composition API and <script setup>
 - Create reusable Vue components where appropriate
 - Use Vue Router for application routing even if the initial dashboard is primarily a single view
@@ -109,6 +114,45 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 - Only create custom components when reusable business-specific functionality is required.
 - Add **JSDoc comments** on all functions for clarity and Copilot context
 - Structure data so it could realistically be replaced with a `fetch()` call
+
+### Data Architecture
+
+All mock data follows a two-layer pattern:
+
+**Layer 1 — `src/data/metrics.json` (raw data)**
+A single JSON file containing every mock value the dashboard displays. Organized into top-level keys that mirror the dashboard sections:
+
+```json
+{
+  "app": { "brand": "⚡ FastForward", "title": "Operations Dashboard", "dataMode": "mock" },
+  "kpi": { "totalShipmentsMTD": 4821, "onTimeDeliveryRate": 91.4, "openExceptions": 38, "avgTransitTime": 2.3, "avgTransitTimeTrend": "down" },
+  "kpiMeta": {
+    "totalShipmentsMTD":  { "label": "Total Shipments",  "sublabel": "Month to Date",     "format": "number"  },
+    "onTimeDeliveryRate": { "label": "On-Time Delivery", "sublabel": "Target ≥ 90%",      "format": "percent" },
+    "openExceptions":     { "label": "Open Exceptions",  "sublabel": "Requires Attention", "format": "count"   },
+    "avgTransitTime":     { "label": "Avg Transit Time", "sublabel": "Trailing 7 Days",    "format": "days"    }
+  },
+  "kpiTooltips": { ... },
+  "thresholds": {
+    "onTimeRate":     { "success": 90, "warning": 80 },
+    "openExceptions": { "danger": 30,  "warning": 15 }
+  },
+  "regional": [ ... ],
+  "exceptions": [ ... ],
+  "volumeTrend": [ ... ],
+  "carriers": [ ... ]
+}
+```
+
+**Layer 2 — `src/data/index.ts` (typed exports)**
+Imports `metrics.json`, applies TypeScript interfaces from `src/types/index.ts`, and re-exports named constants (`kpiData`, `regionalData`, `exceptionsData`, `volumeTrendData`, `carrierData`, `carrierData`, `thresholds`, `kpiMeta`, `appConfig`). Components import exclusively from this file, never from `metrics.json` directly.
+
+Business rules that live in data (not components):
+- On-time rate thresholds (90% success, 80% warning) — shared by KPI cards, Regional table, and Carrier cards
+- Open exceptions thresholds (>30 danger, ≥15 warning)
+- KPI card labels, sublabels, and value format type
+- Application brand name, page title, and data mode indicator
+- Exception filter region list (derived from `regional` array — never hardcoded separately)
 
 ### HTML Guidelines
 - Use semantic HTML5 elements (`<main>`, `<section>`, `<header>`, `<nav>`, `<article>`)
@@ -169,25 +213,32 @@ Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS
 - Left align the logo and title to the dashboard content area, and right align the timestamp and status pill (not browser width)
 
 #### 2. 📊 KPI Summary Row
-Four stat cards displayed in a horizontal row:
+Four stat cards displayed in a horizontal row. Values below are representative examples — actual mock data is in `src/data/metrics.json`.
 
 | KPI | Mock Value | Status Logic |
 |---|---|---|
 | Total Shipments (MTD) | 4,821 | Neutral |
-| On-Time Delivery Rate | 91.4% | Green if ≥90%, Yellow if 80–89%, Red if <80% |
-| Open Exceptions | 38 | Red if >30, Yellow if 15–30, Green if <15 |
+| On-Time Delivery Rate | 88.2% | Green if ≥90%, Yellow if 80–89%, Red if <80% |
+| Open Exceptions | 41 | Red if >30, Yellow if 15–30, Green if <15 |
 | Avg Transit Time | 2.3 days | Neutral with trend indicator |
 
 #### 3. 🗺️ Regional Performance Table
-A styled HTML table showing performance by region:
+A styled HTML table showing performance by region. Values below are representative examples — actual mock data is in `src/data/metrics.json`.
 
 | Region | Shipments | On-Time % | Exceptions | Status |
 |---|---|---|---|---|
 | Northeast | 1,204 | 94.2% | 6 | 🟢 On Track |
-| Southeast | 987 | 88.7% | 11 | 🟡 At Risk |
+| Southeast | 987 | 74.1% | 14 | 🔴 Critical |
 | Midwest | 1,103 | 92.1% | 7 | 🟢 On Track |
 | Southwest | 743 | 85.3% | 9 | 🟡 At Risk |
 | West Coast | 784 | 93.8% | 5 | 🟢 On Track |
+
+**Regional status logic** (mirrors the on-time rate thresholds used by KPI cards):
+- 🟢 **On Track** — on-time rate ≥ 90%
+- 🟡 **At Risk** — on-time rate 80–89%; elevated exceptions; needs monitoring
+- 🔴 **Critical** — on-time rate < 80%; high exception volume; requires immediate ops intervention
+
+The exception count and on-time rate for each region must be internally consistent: a Critical region should have the highest exception counts, directly explaining the depressed on-time rate.
 
 
 #### 4. ⚠️ Open Exceptions Feed
@@ -221,7 +272,7 @@ A **pure CSS + JS bar chart** (Use a custom implementation for the shipment char
 
 
 #### 6. 🚚 Carrier Performance Snapshot
-A small summary panel showing top 4 carriers:
+A small summary panel showing top 4 carriers. Values below are representative examples — actual mock data is in `src/data/metrics.json`.
 
 | Carrier | Shipments | On-Time % | Trend |
 |---|---|---|---|

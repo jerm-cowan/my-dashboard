@@ -78,15 +78,18 @@
 </template>
 
 <script setup lang="ts">
-import { regionalData } from '@/data/index'
+import { regionalData, thresholds } from '@/data/index'
 
 defineProps<{ expanded: boolean }>()
 defineEmits<{ 'update:expanded': [value: boolean] }>()
 
-/** Returns the status class key for an on-time rate value. */
+/**
+ * Returns the status class key for an on-time rate value.
+ * Thresholds sourced from metrics.json — shared with KpiGrid and CarrierGrid.
+ */
 function onTimeRateStatus(value: number): 'success' | 'warning' | 'danger' {
-  if (value >= 90) return 'success'
-  if (value >= 80) return 'warning'
+  if (value >= thresholds.onTimeRate.success) return 'success'
+  if (value >= thresholds.onTimeRate.warning) return 'warning'
   return 'danger'
 }
 

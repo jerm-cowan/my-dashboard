@@ -8,9 +8,9 @@
   >
     <div class="navbar__inner">
       <div class="navbar__brand">
-        <span class="navbar__logo" aria-label="FastForward Logistics">⚡ FastForward</span>
+        <span class="navbar__logo" :aria-label="appConfig.brand">{{ appConfig.brand }}</span>
         <span class="navbar__divider" aria-hidden="true"></span>
-        <span class="navbar__title">Operations Dashboard</span>
+        <span class="navbar__title">{{ appConfig.title }}</span>
       </div>
 
       <div class="navbar__meta">
@@ -21,7 +21,7 @@
           aria-label="Data source: Mock Data"
           class="status-pill"
         >
-          Mock Data
+          {{ appConfig.dataMode === 'mock' ? 'Mock Data' : 'Live Data' }}
         </v-chip>
 
         <time
@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useTheme } from 'vuetify'
+import { appConfig } from '@/data/index'
 
 const vuetifyTheme = useTheme()
 

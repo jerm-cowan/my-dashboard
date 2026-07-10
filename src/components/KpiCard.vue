@@ -41,6 +41,8 @@ const props = defineProps<{
   label: string
   sublabel: string
   value: number
+  /** Value display format sourced from kpiMeta in metrics.json. */
+  format: 'number' | 'percent' | 'days' | 'count'
   status: 'success' | 'warning' | 'danger' | 'neutral'
   trend?: 'up' | 'down' | 'flat'
   delay: number
@@ -53,12 +55,17 @@ defineEmits<{
   'hide-tooltip': []
 }>()
 
-/** Formats a raw KPI value into its display string. */
+/**
+ * Formats a raw KPI value using the format type declared in metrics.json.
+ * Adding a new KPI only requires updating metrics.json — no code change needed.
+ */
 const formattedValue = computed(() => {
-  if (props.kpiKey === 'totalShipmentsMTD') return props.value.toLocaleString()
-  if (props.kpiKey === 'onTimeDeliveryRate') return `${props.value}%`
-  if (props.kpiKey === 'avgTransitTime') return `${props.value} days`
-  return String(props.value)
+  switch (props.format) {
+    case 'number':  return props.value.toLocaleString()
+    case 'percent': return `${props.value}%`
+    case 'days':    return `${props.value} days`
+    default:        return String(props.value)
+  }
 })
 
 const trendIcon = computed(() => {

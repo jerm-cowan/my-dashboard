@@ -2,6 +2,23 @@
  * @fileoverview Shared TypeScript types for the FastForward Logistics Operations Dashboard.
  */
 
+export interface AppConfig {
+  brand: string
+  title: string
+  dataMode: 'mock' | 'live'
+}
+
+export interface KpiMetaEntry {
+  label: string
+  sublabel: string
+  format: 'number' | 'percent' | 'days' | 'count'
+}
+
+export interface Thresholds {
+  onTimeRate: { success: number; warning: number }
+  openExceptions: { danger: number; warning: number }
+}
+
 export interface KpiData {
   totalShipmentsMTD: number
   onTimeDeliveryRate: number

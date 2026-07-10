@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import KpiCard from './KpiCard.vue'
-import { kpiData, kpiTooltips } from '@/data/index'
+import { kpiData, kpiTooltips, kpiMeta, thresholds } from '@/data/index'
 
 const isExpanded = ref(true)
 const refreshing = ref(false)
@@ -70,58 +70,60 @@ const tooltip = reactive({
 
 /**
  * Determines the status class for a KPI based on business threshold rules.
+ * Thresholds are sourced from metrics.json via the thresholds export so
+ * there is a single place to change them across all components.
  * @param key - KPI data key
  * @param value - Current KPI value
  */
 function getKpiStatus(key: string, value: number): 'success' | 'warning' | 'danger' | 'neutral' {
   if (key === 'onTimeDeliveryRate') {
-    if (value >= 90) return 'success'
-    if (value >= 80) return 'warning'
+    if (value >= thresholds.onTimeRate.success) return 'success'
+    if (value >= thresholds.onTimeRate.warning) return 'warning'
     return 'danger'
   }
   if (key === 'openExceptions') {
-    if (value > 30) return 'danger'
-    if (value >= 15) return 'warning'
+    if (value > thresholds.openExceptions.danger) return 'danger'
+    if (value >= thresholds.openExceptions.warning) return 'warning'
     return 'success'
   }
   return 'neutral'
 }
 
+/**
+ * Card definitions derived from metrics.json via kpiMeta.
+ * Labels, sublabels, and format types come from data — not hardcoded here.
+ */
 const cardDefs = computed(() => [
   {
     kpiKey: 'totalShipmentsMTD',
-    label: 'Total Shipments',
-    sublabel: 'Month to Date',
+    ...kpiMeta['totalShipmentsMTD'],
     value: kpiData.totalShipmentsMTD,
     status: getKpiStatus('totalShipmentsMTD', kpiData.totalShipmentsMTD),
     tooltipText: kpiTooltips['totalShipmentsMTD'],
   },
   {
     kpiKey: 'onTimeDeliveryRate',
-    label: 'On-Time Delivery',
-    sublabel: 'Target ≥ 90%',
+    ...kpiMeta['onTimeDeliveryRate'],
     value: kpiData.onTimeDeliveryRate,
     status: getKpiStatus('onTimeDeliveryRate', kpiData.onTimeDeliveryRate),
     tooltipText: kpiTooltips['onTimeDeliveryRate'],
   },
   {
     kpiKey: 'openExceptions',
-    label: 'Open Exceptions',
-    sublabel: 'Requires Attention',
+    ...kpiMeta['openExceptions'],
     value: kpiData.openExceptions,
     status: getKpiStatus('openExceptions', kpiData.openExceptions),
     tooltipText: kpiTooltips['openExceptions'],
   },
   {
     kpiKey: 'avgTransitTime',
-    label: 'Avg Transit Time',
-    sublabel: 'Trailing 7 Days',
+    ...kpiMeta['avgTransitTime'],
     value: kpiData.avgTransitTime,
     status: getKpiStatus('avgTransitTime', kpiData.avgTransitTime),
     trend: kpiData.avgTransitTimeTrend,
     tooltipText: kpiTooltips['avgTransitTime'],
   },
-] as const)
+])
 
 /** Shows the KPI tooltip positioned near the hovered card element. */
 function onShowTooltip(cardEl: HTMLElement, text: string) {

@@ -123,7 +123,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { exceptionsData } from '@/data/index'
+import { exceptionsData, regionalData } from '@/data/index'
 import type { Exception } from '@/types/index'
 
 defineProps<{ expanded: boolean }>()
@@ -135,17 +135,17 @@ const sortValue = ref('priority-time')
 
 const PRIORITY_ORDER: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 }
 
-/** Filter dropdown items — flattened Priority and Region groups. */
+/**
+ * Filter dropdown items.
+ * Region options are derived from regionalData so adding a region to
+ * metrics.json automatically appears here — no hardcoded list to maintain.
+ */
 const filterItems = [
-  { title: 'All Exceptions', value: 'all' },
-  { title: 'HIGH Priority', value: 'priority-HIGH' },
-  { title: 'MEDIUM Priority', value: 'priority-MEDIUM' },
-  { title: 'LOW Priority', value: 'priority-LOW' },
-  { title: 'Northeast', value: 'region-Northeast' },
-  { title: 'Southeast', value: 'region-Southeast' },
-  { title: 'Midwest', value: 'region-Midwest' },
-  { title: 'Southwest', value: 'region-Southwest' },
-  { title: 'West Coast', value: 'region-West Coast' },
+  { title: 'All Exceptions',   value: 'all'            },
+  { title: 'HIGH Priority',    value: 'priority-HIGH'  },
+  { title: 'MEDIUM Priority',  value: 'priority-MEDIUM'},
+  { title: 'LOW Priority',     value: 'priority-LOW'   },
+  ...regionalData.map(r => ({ title: r.region, value: `region-${r.region}` })),
 ]
 
 /** Sort dropdown items. */
