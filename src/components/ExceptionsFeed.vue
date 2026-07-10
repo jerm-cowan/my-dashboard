@@ -124,7 +124,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { exceptionsData } from '@/data/index'
-import type { Exception } from '@/data/index'
+import type { Exception } from '@/types/index'
 
 defineProps<{ expanded: boolean }>()
 defineEmits<{ 'update:expanded': [value: boolean] }>()

@@ -8,6 +8,10 @@ node_modules/
 # TypeScript build info
 *.tsbuildinfo
 
+# Vite config compiled outputs
+vite.config.js
+vite.config.d.ts
+
 # Logs
 *.log
 npm-debug.log*

@@ -4,45 +4,8 @@
  * Data reflects realistic month-to-date metrics for a mid-size LTL freight operation.
  */
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export interface KpiData {
-  totalShipmentsMTD: number
-  onTimeDeliveryRate: number
-  openExceptions: number
-  avgTransitTime: number
-  avgTransitTimeTrend: 'up' | 'down' | 'flat'
-}
-
-export interface RegionalRow {
-  region: string
-  shipments: number
-  onTimeRate: number
-  exceptions: number
-  status: 'on-track' | 'at-risk' | 'critical'
-}
-
-export interface Exception {
-  id: string
-  shipmentId: string
-  type: string
-  region: string
-  hoursOpen: number
-  priority: 'HIGH' | 'MEDIUM' | 'LOW'
-}
-
-export interface VolumeTrendDay {
-  day: string
-  date: string
-  volume: number
-}
-
-export interface CarrierRow {
-  carrier: string
-  shipments: number
-  onTimeRate: number
-  trend: 'up' | 'flat' | 'down'
-}
+export type { KpiData, RegionalRow, Exception, VolumeTrendDay, CarrierRow } from '@/types/index'
+import type { KpiData, RegionalRow, Exception, VolumeTrendDay, CarrierRow } from '@/types/index'
 
 // ─── KPI Data ─────────────────────────────────────────────────────────────────
 
