@@ -1,6 +1,5 @@
 ```md
 # FastForward Logistics — Internal Operations Dashboard
-## Copilot Brief for Claude Sonnet 4.6
 
 ---
 
