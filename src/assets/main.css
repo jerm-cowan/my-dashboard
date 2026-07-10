@@ -600,11 +600,11 @@ body {
 }
 
 .kpi-card__label {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.07em;
   transition: color var(--t-slow);
 }
 
@@ -696,12 +696,12 @@ body {
 
 /* Override v-table to match dashboard typography and original density */
 .regional-table thead th {
-  padding: var(--sp-3) var(--sp-6) !important;
-  font-size: var(--font-size-xs) !important;
+  padding: var(--sp-3) var(--sp-4) !important;
+  font-size: var(--font-size-2xs) !important;
   font-weight: 700 !important;
   color: var(--color-text-muted) !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.08em !important;
+  letter-spacing: 0.06em !important;
   border-bottom: 1px solid var(--color-border) !important;
   white-space: nowrap;
   background-color: transparent !important;
@@ -721,7 +721,7 @@ body {
 }
 
 .regional-table tbody td {
-  padding: var(--sp-3) var(--sp-6) !important;
+  padding: var(--sp-3) var(--sp-4) !important;
   vertical-align: middle;
   /* Prevent Vuetify v-table from applying its own text color */
   color: inherit !important;
@@ -732,13 +732,31 @@ body {
 .regional-table {
   background: transparent !important;
   padding: var(--sp-5) 0 var(--sp-4) !important;
+  /*
+    Fixed layout so columns share the available width proportionally
+    rather than auto-expanding to the widest cell. This keeps spacing
+    consistent whether the table is half-width (side-by-side) or full-width
+    (stacked).
+  */
+  table-layout: fixed;
+  width: 100%;
 }
 
+/* Column width proportions — must total 100% */
+.regional-table thead th:nth-child(1) { width: 24%; } /* Region     */
+.regional-table thead th:nth-child(2) { width: 19%; } /* Shipments  */
+.regional-table thead th:nth-child(3) { width: 21%; } /* On-Time %  */
+.regional-table thead th:nth-child(4) { width: 17%; } /* Exceptions */
+.regional-table thead th:nth-child(5) { width: 19%; } /* Status     */
 
 /* Table cell formatting — shared by regional table rows */
+/* Prevent long region names from breaking the fixed layout */
 .table-cell--region {
   font-weight: 600;
   color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .table-cell--number {
@@ -1147,11 +1165,11 @@ body {
 }
 
 .carrier-stat-label {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
   transition: color var(--t-slow);
 }
@@ -1234,6 +1252,85 @@ body {
    14. Responsive Adjustments (baseline ≥ 1024px)
    ============================================================ */
 
+/*
+  ≤1279px (Vuetify md, covers 1024–1279px):
+  Stack the two-column row so Regional Performance and Open Exceptions
+  each occupy full width. Tighten grid padding to recover horizontal room.
+*/
+@media (max-width: 1279px) {
+  /* Stack two-column row to single column */
+  .dashboard__row {
+    flex-direction: column !important;
+    height: auto !important;
+    align-items: stretch;
+  }
+
+  /* Each column restores to full width */
+  .dashboard__col-left,
+  .dashboard__col-right {
+    flex: 0 0 auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /*
+    Set a defined height (not max-height) on the Exceptions section card so that
+    flex children can fill the bounded space. max-height alone does NOT give
+    flex-grow children a calculable height — they still lay out at natural size
+    and the parent just clips them visually, leaving no scrollable feed.
+
+    With height: Xpx, the flex column allocates:
+      header  →  ~52px (flex-shrink: 0)
+      section-content  →  remaining height (flex: 1 1 auto)
+        controls  →  ~60px
+        feed  →  remainder, overflow-y: auto scrolls ✓
+
+    Value chosen to approximate Regional Performance's natural content height.
+  */
+  .dashboard__col-right .dashboard__section {
+    height: 390px !important;
+    overflow: hidden;
+  }
+
+  /* Feed inherits its scrollable height from the bounded section card above —
+     restore the base rule so no conflicting max-height interferes. */
+  .dashboard__col-right .exceptions-feed {
+    max-height: none !important;
+  }
+
+  /* Drawer: collapsed state should hide vertically (height), not clip width */
+  .dashboard__row--left-collapsed .dashboard__col-left {
+    flex: 0 0 52px !important;
+    max-width: 100% !important;
+  }
+  .dashboard__row--right-collapsed .dashboard__col-right {
+    flex: 0 0 52px !important;
+    max-width: 100% !important;
+  }
+
+  /* Tighten KPI and carrier grid padding to recover space */
+  .kpi-grid-row,
+  .carrier-grid-row {
+    gap: var(--sp-3) !important;
+    padding: var(--sp-4) !important;
+  }
+
+  /* Filter controls: allow selects to shrink rather than overflow */
+  .exceptions-filter-select {
+    flex: 1 1 130px !important;
+    min-width: 110px !important;
+  }
+  .exceptions-sort-select {
+    flex: 1 1 160px !important;
+    min-width: 130px !important;
+  }
+}
+
+/*
+  ≤1024px (minimum supported width):
+  Further density reductions on top of the stacking above.
+*/
 @media (max-width: 1024px) {
   :root {
     --dash-pad: 1rem;
@@ -1243,8 +1340,29 @@ body {
     display: none;
   }
 
+  /* Reduce large KPI value font at minimum width */
   .kpi-card__value {
     font-size: var(--font-size-2xl);
+  }
+
+  /* Tighten KPI card inner padding */
+  .kpi-card {
+    padding: var(--sp-4) !important;
+  }
+
+  /* Tighten carrier card inner padding */
+  .carrier-card {
+    padding: var(--sp-4);
+  }
+
+  /* Carrier stat value: slightly smaller at 1024px */
+  .carrier-stat-value {
+    font-size: var(--font-size-base);
+  }
+
+  /* Carrier trend arrow: scale down */
+  .carrier-trend {
+    font-size: var(--font-size-xl);
   }
 }
 
