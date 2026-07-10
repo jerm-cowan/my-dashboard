@@ -347,16 +347,24 @@ body {
   transition: flex var(--t-slow), max-width var(--t-slow);
 }
 
-/* Drawer: left panel collapsed → 52px vertical strip */
-.dashboard__row--left-collapsed .dashboard__col-left {
-  flex: 0 0 52px !important;
-  max-width: 52px !important;
-}
+/* ── 2-column-only: drawer strip + caret directions ────────────────────────
+   All rules below only apply when the two-column side-by-side layout is
+   active (≥1280px). At the stacked breakpoint these rules must be absent so
+   collapsed sections behave like every other section on the page.
+   This gate applies to any future 2-column row sections as well.
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  /* Drawer: left panel collapsed → 52px vertical strip */
+  .dashboard__row--left-collapsed .dashboard__col-left {
+    flex: 0 0 52px !important;
+    max-width: 52px !important;
+  }
 
-/* Drawer: right panel collapsed → 52px vertical strip */
-.dashboard__row--right-collapsed .dashboard__col-right {
-  flex: 0 0 52px !important;
-  max-width: 52px !important;
+  /* Drawer: right panel collapsed → 52px vertical strip */
+  .dashboard__row--right-collapsed .dashboard__col-right {
+    flex: 0 0 52px !important;
+    max-width: 52px !important;
+  }
 }
 
 /* Fixed print/export FAB */
@@ -489,57 +497,59 @@ body {
   max-height: 0;
 }
 
-/* ── Row section: caret direction overrides ─────────────────────────────────
+/* ── Row section: caret direction overrides (2-column layout only) ──────────
    Left col (Regional): expanded = caret points LEFT; collapsed = points RIGHT.
    Right col (Exceptions): expanded = caret points RIGHT; collapsed = points LEFT.
+   Gated to ≥1280px so stacked sections use the standard up/down caret.
    ──────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  .dashboard__row .dashboard__col-left .section-toggle span {
+    transform: rotate(90deg); /* expanded: ◂ points left */
+  }
+  .dashboard__row .dashboard__col-left .section-toggle[aria-expanded="false"] span {
+    transform: rotate(-90deg); /* collapsed: ▸ points right (inward) */
+  }
 
-.dashboard__row .dashboard__col-left .section-toggle span {
-  transform: rotate(90deg); /* expanded: ◂ points left */
-}
-.dashboard__row .dashboard__col-left .section-toggle[aria-expanded="false"] span {
-  transform: rotate(-90deg); /* collapsed: ▸ points right (inward) */
-}
+  .dashboard__row .dashboard__col-right .section-toggle span {
+    transform: rotate(-90deg); /* expanded: ▸ points right */
+  }
+  .dashboard__row .dashboard__col-right .section-toggle[aria-expanded="false"] span {
+    transform: rotate(90deg); /* collapsed: ◂ points left (inward) */
+  }
 
-.dashboard__row .dashboard__col-right .section-toggle span {
-  transform: rotate(-90deg); /* expanded: ▸ points right */
-}
-.dashboard__row .dashboard__col-right .section-toggle[aria-expanded="false"] span {
-  transform: rotate(90deg); /* collapsed: ◂ points left (inward) */
-}
+  /* ── Drawer strip: collapsed panel becomes a narrow vertical tab ──────────
+     ──────────────────────────────────────────────────────────────────────── */
 
-/* ── Drawer strip: collapsed panel becomes a narrow vertical tab ────────────
-   ──────────────────────────────────────────────────────────────────────────── */
+  .dashboard__row--left-collapsed .dashboard__col-left .section-header,
+  .dashboard__row--right-collapsed .dashboard__col-right .section-header {
+    height: 100%;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-4);
+    border-bottom: none;
+    padding: var(--sp-6) var(--sp-2);
+  }
 
-.dashboard__row--left-collapsed .dashboard__col-left .section-header,
-.dashboard__row--right-collapsed .dashboard__col-right .section-header {
-  height: 100%;
-  flex-direction: column-reverse;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-4);
-  border-bottom: none;
-  padding: var(--sp-6) var(--sp-2);
-}
+  .dashboard__row--left-collapsed .dashboard__col-left .section-title,
+  .dashboard__row--right-collapsed .dashboard__col-right .section-title {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    gap: 0;
+  }
 
-.dashboard__row--left-collapsed .dashboard__col-left .section-title,
-.dashboard__row--right-collapsed .dashboard__col-right .section-title {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  gap: 0;
-}
+  .dashboard__row--right-collapsed .dashboard__col-right .section-title__count {
+    display: none;
+  }
 
-.dashboard__row--right-collapsed .dashboard__col-right .section-title__count {
-  display: none;
-}
-
-/* Expanded panel gets raised shadow */
-.dashboard__row--left-collapsed .dashboard__col-right .dashboard__section,
-.dashboard__row--right-collapsed .dashboard__col-left .dashboard__section {
-  position: relative;
-  z-index: 1;
-  box-shadow: var(--shadow-raised);
+  /* Expanded panel gets raised shadow */
+  .dashboard__row--left-collapsed .dashboard__col-right .dashboard__section,
+  .dashboard__row--right-collapsed .dashboard__col-left .dashboard__section {
+    position: relative;
+    z-index: 1;
+    box-shadow: var(--shadow-raised);
+  }
 }
 
 /* ============================================================
@@ -1293,20 +1303,20 @@ body {
     overflow: hidden;
   }
 
+  /*
+    When the section is collapsed, release the fixed height so the card
+    shrinks to just the header. The :has() selector has higher specificity
+    than the rule above, so it wins without needing a source-order trick.
+    The !important still beats the Vuetify inline style="height: 100%".
+  */
+  .dashboard__col-right .dashboard__section:has(.section-content--collapsed) {
+    height: auto !important;
+  }
+
   /* Feed inherits its scrollable height from the bounded section card above —
      restore the base rule so no conflicting max-height interferes. */
   .dashboard__col-right .exceptions-feed {
     max-height: none !important;
-  }
-
-  /* Drawer: collapsed state should hide vertically (height), not clip width */
-  .dashboard__row--left-collapsed .dashboard__col-left {
-    flex: 0 0 52px !important;
-    max-width: 100% !important;
-  }
-  .dashboard__row--right-collapsed .dashboard__col-right {
-    flex: 0 0 52px !important;
-    max-width: 100% !important;
   }
 
   /* Tighten KPI and carrier grid padding to recover space */
@@ -1316,15 +1326,15 @@ body {
     padding: var(--sp-4) !important;
   }
 
-  /* Filter controls: allow selects to shrink rather than overflow */
+  /* Filter/sort selects keep their original fixed widths at all breakpoints —
+     only the search field flexes to fill remaining space. */
   .exceptions-filter-select {
-    flex: 1 1 130px !important;
-    min-width: 110px !important;
+    flex: 0 0 170px !important;
   }
   .exceptions-sort-select {
-    flex: 1 1 160px !important;
-    min-width: 130px !important;
+    flex: 0 0 210px !important;
   }
+
 }
 
 /*
