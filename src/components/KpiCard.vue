@@ -24,7 +24,7 @@
       <span
         v-if="trend"
         class="kpi-trend"
-        :class="`trend--${trend}`"
+        :class="trendColorClass"
         :aria-label="`Trend: ${trendLabel}`"
       >{{ trendIcon }}</span>
     </div>
@@ -45,6 +45,12 @@ const props = defineProps<{
   format: 'number' | 'percent' | 'days' | 'count'
   status: 'success' | 'warning' | 'danger' | 'neutral'
   trend?: 'up' | 'down' | 'flat'
+  /**
+   * When true, the trend color and aria semantics are inverted so that a
+   * 'down' trend renders green and reads as "improving" — used for metrics
+   * where a lower value is operationally positive (e.g. Avg Transit Time).
+   */
+  trendInverted?: boolean
   delay: number
   refreshing: boolean
   tooltipText: string
@@ -73,8 +79,26 @@ const trendIcon = computed(() => {
   return props.trend ? (icons[props.trend] ?? '') : ''
 })
 
+/**
+ * Returns the CSS color class for the trend arrow.
+ * When trendInverted, the color mapping is flipped so 'down' = success (green)
+ * and 'up' = warning (orange), matching the operational meaning of the metric.
+ */
+const trendColorClass = computed(() => {
+  if (!props.trend) return ''
+  if (!props.trendInverted) return `trend--${props.trend}`
+  const invertMap: Record<string, string> = { up: 'down', down: 'up', flat: 'flat' }
+  return `trend--${invertMap[props.trend] ?? props.trend}`
+})
+
+/**
+ * Human-readable trend label for aria-label.
+ * Respects trendInverted so screen readers announce the correct meaning.
+ */
 const trendLabel = computed(() => {
-  const labels: Record<string, string> = { up: 'improving', down: 'declining', flat: 'stable' }
-  return props.trend ? (labels[props.trend] ?? props.trend) : ''
+  if (!props.trend) return ''
+  const standard:  Record<string, string> = { up: 'improving', down: 'declining', flat: 'stable' }
+  const inverted:  Record<string, string> = { up: 'declining', down: 'improving', flat: 'stable' }
+  return (props.trendInverted ? inverted : standard)[props.trend] ?? props.trend
 })
 </script>

@@ -12,6 +12,12 @@ export interface KpiMetaEntry {
   label: string
   sublabel: string
   format: 'number' | 'percent' | 'days' | 'count'
+  /**
+   * When true, the trend arrow color is inverted: 'down' maps to success (green)
+   * and 'up' maps to warning (orange). Use for metrics where a declining value
+   * is operationally positive — e.g. Avg Transit Time going down = faster deliveries.
+   */
+  trendInverted?: boolean
 }
 
 export interface Thresholds {

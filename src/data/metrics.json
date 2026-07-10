@@ -19,7 +19,7 @@
     "totalShipmentsMTD":  { "label": "Total Shipments",  "sublabel": "Month to Date",      "format": "number"  },
     "onTimeDeliveryRate": { "label": "On-Time Delivery",  "sublabel": "Target ≥ 90%",       "format": "percent" },
     "openExceptions":     { "label": "Open Exceptions",   "sublabel": "Requires Attention",  "format": "count"   },
-    "avgTransitTime":     { "label": "Avg Transit Time",  "sublabel": "Trailing 7 Days",     "format": "days"    }
+    "avgTransitTime":     { "label": "Avg Transit Time",  "sublabel": "Trailing 7 Days",     "format": "days", "trendInverted": true }
   },
 
   "kpiTooltips": {
