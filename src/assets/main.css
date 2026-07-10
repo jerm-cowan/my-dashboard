@@ -100,7 +100,25 @@
 }
 
 /* ============================================================
-   2. Reset & Base
+   2. Vuetify Typography Override
+   ============================================================ */
+
+/*
+  Restore Inter across all Vuetify components. Vuetify defaults to Roboto;
+  overriding on .v-application cascades to every component it renders.
+*/
+.v-application,
+.v-application .v-field,
+.v-application .v-chip,
+.v-application .v-btn,
+.v-application .v-table,
+.v-application .v-list-item,
+.v-application .v-select__content {
+  font-family: var(--font-family) !important;
+}
+
+/* ============================================================
+   2b. Reset & Base
    ============================================================ */
 
 *, *::before, *::after {
@@ -159,10 +177,39 @@ body {
   transition: background-color var(--t-slow), border-color var(--t-slow) !important;
 }
 
+/* Remove v-toolbar's default inline padding so our inner wrapper controls layout */
+.navbar-appbar .v-toolbar__content {
+  padding: 0 !important;
+}
+
+/*
+  Inner wrapper: constrains content to the same max-width and horizontal padding
+  as the dashboard grid, so the logo left-aligns with section content and the
+  meta items right-align with section content — not the browser edge.
+*/
+.navbar__inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--dash-pad);
+}
+
 .navbar__brand {
   display: flex;
   align-items: center;
+  gap: var(--sp-4);
   min-width: 0;
+}
+
+.navbar__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-shrink: 0;
 }
 
 .navbar__logo {
@@ -227,16 +274,68 @@ body {
 /* v-container fluid: constrain to brief's max-width with consistent padding */
 .dashboard-container {
   max-width: var(--max-w) !important;
-  padding: var(--sp-6) var(--dash-pad) var(--sp-12) !important;
+  margin-inline: auto !important;
+  /*
+    v-app-bar inside RouterView doesn't always register with Vuetify's layout
+    context, so v-main may provide zero top-padding. We own the full offset here:
+    navbar height (--navbar-h) + breathing room (--sp-6).
+  */
+  padding: calc(var(--navbar-h) + var(--sp-6)) var(--dash-pad) var(--sp-12) !important;
   display: flex;
   flex-direction: column;
   gap: var(--section-gap);
+}
+
+/*
+  All direct children of the container (v-card sections and v-row) should
+  behave as full-width flex children with no implicit margins fighting the gap.
+*/
+.dashboard-container > .v-card,
+.dashboard-container > .dashboard__row {
+  flex-shrink: 0;
+  width: 100%;
 }
 
 /* Two-column row: Regional (left) + Exceptions (right) — v-row override */
 .dashboard__row {
   gap: var(--section-gap) !important;
   align-items: stretch;
+  /*
+    Explicit height so both sections match and the exceptions feed can use
+    flex-fill to scroll within the bounded space, mirroring the old build.
+  */
+  height: 500px;
+}
+
+/*
+  Exceptions section: flex column so the feed fills remaining space after
+  the section header and controls row, then scrolls within that space.
+  The collapse animation (max-height: 3000px → 0) still works because
+  max-height on a flex item constrains flex layout correctly.
+*/
+.dashboard__col-right .dashboard__section {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.dashboard__col-right .section-content {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.dashboard__col-right .exceptions-controls {
+  flex-shrink: 0;
+}
+
+/* Feed fills remaining height within the section and scrolls */
+.dashboard__col-right .exceptions-feed {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto;
 }
 
 /* Both cols default to equal flex width */
@@ -274,12 +373,16 @@ body {
    5. Section Card Wrapper (v-card)
    ============================================================ */
 
-/* v-card provides the surface background; we add border, radius, overflow */
+/*
+  v-card handles the surface background color via its theme context.
+  We add depth (shadow), border, and radius on top.
+*/
 .dashboard__section {
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
   overflow: hidden;
-  transition: border-color var(--t-slow);
+  transition: border-color var(--t-slow), box-shadow var(--t-slow);
 }
 
 .section-header {
@@ -289,7 +392,11 @@ body {
   padding: var(--sp-4) var(--sp-6);
   min-height: 52px;
   border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-surface-raised);
+  /*
+    !important prevents Vuetify's v-card color context from overriding the
+    section-header's raised background tint in either theme.
+  */
+  background-color: var(--color-surface-raised) !important;
   transition:
     background-color var(--t-slow),
     border-color var(--t-slow);
@@ -301,7 +408,8 @@ body {
   gap: var(--sp-2);
   font-size: var(--font-size-xs);
   font-weight: 700;
-  color: var(--color-text-muted);
+  /* !important ensures the muted label color isn't washed out by Vuetify's on-surface inheritance */
+  color: var(--color-text-muted) !important;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   transition: color var(--t-slow);
@@ -438,15 +546,37 @@ body {
    6. KPI Grid & Cards
    ============================================================ */
 
-/* KPI cards are rendered inside v-row/v-col — .kpi-grid removed */
+/* KPI cards are rendered inside v-row/v-col — .kpi-grid CSS grid replaced */
+
+/*
+  Use no-gutters + explicit CSS rather than Vuetify spacing utilities.
+  Vuetify's .v-row styles override utility classes in unpredictable ways;
+  this matches the old build's kpi-grid padding/gap exactly.
+  display:grid overrides v-row's flex so that 4 equal columns never wrap
+  regardless of viewport width — matching the old repeat(4, 1fr) grid.
+*/
+.kpi-grid-row,
+.carrier-grid-row {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: var(--sp-4) !important;
+  padding: var(--sp-6) !important;
+  margin: 0 !important;
+}
 
 .kpi-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  /*
+    Use !important on layout + color properties so Vuetify's .v-theme--xxx .v-card
+    rules (specificity 0,2,1) cannot override the surface-raised background,
+    the flex column layout, or the KPI value text color in either theme.
+  */
+  display: flex !important;
+  flex-direction: column !important;
   gap: var(--sp-2);
-  padding: var(--sp-6);
-  background-color: var(--color-surface-raised);
+  padding: var(--sp-6) !important;
+  background-color: var(--color-surface-raised) !important;
+  color: var(--color-text-primary) !important;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -487,7 +617,8 @@ body {
 .kpi-card__value {
   font-size: var(--font-size-3xl);
   font-weight: 800;
-  color: var(--color-text-primary);
+  /* !important guards against Vuetify's on-surface color inheritance */
+  color: var(--color-text-primary) !important;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
@@ -563,9 +694,9 @@ body {
    8. Regional Performance Table (v-table)
    ============================================================ */
 
-/* Override v-table thead to match dashboard typography */
+/* Override v-table to match dashboard typography and original density */
 .regional-table thead th {
-  padding: var(--sp-3) var(--sp-4) !important;
+  padding: var(--sp-3) var(--sp-6) !important;
   font-size: var(--font-size-xs) !important;
   font-weight: 700 !important;
   color: var(--color-text-muted) !important;
@@ -573,6 +704,7 @@ body {
   letter-spacing: 0.08em !important;
   border-bottom: 1px solid var(--color-border) !important;
   white-space: nowrap;
+  background-color: transparent !important;
 }
 
 .regional-table tbody tr {
@@ -584,9 +716,22 @@ body {
   border-bottom: none !important;
 }
 
+.regional-table tbody tr:hover td {
+  background-color: var(--color-surface-raised) !important;
+}
+
 .regional-table tbody td {
-  padding: var(--sp-3) var(--sp-4) !important;
+  padding: var(--sp-3) var(--sp-6) !important;
   vertical-align: middle;
+  /* Prevent Vuetify v-table from applying its own text color */
+  color: inherit !important;
+  background-color: transparent !important;
+}
+
+/* v-table wrapper: outer top/bottom breathing room matches KPI grid's 24px outer padding */
+.regional-table {
+  background: transparent !important;
+  padding: var(--sp-5) 0 var(--sp-4) !important;
 }
 
 
@@ -640,29 +785,91 @@ body {
 /* Controls row: search (flex-grow) → filter → sort */
 .exceptions-controls {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-6);
+  padding: var(--sp-4) var(--sp-6);
   border-bottom: 1px solid var(--color-border-subtle);
   flex-wrap: wrap;
   transition: border-color var(--t-slow);
 }
 
-/* Search field fills remaining space */
+/* Search field fills remaining space; add 4px before the prepend icon */
 .exceptions-search-field {
   flex: 1;
   min-width: 160px;
 }
 
-/* Filter and sort selects have fixed minimum widths */
+/* Restore search field to 4px — only the select dropdowns need 10px.
+   Set both physical and logical padding properties because Vuetify uses
+   padding-inline-start/end internally, which physical-only rules don't override. */
+.exceptions-search-field .v-field__input {
+  padding-left: 4px !important;
+  padding-inline-start: 4px !important;
+}
+
+/* Collapse the gap between the icon and the placeholder text:
+   remove the right-side padding Vuetify adds to the prepend-inner container. */
+.exceptions-search-field .v-field__prepend-inner {
+  padding-left: 4px !important;
+  padding-inline-start: 4px !important;
+  padding-right: 0 !important;
+  padding-inline-end: 0 !important;
+}
+
+/* Match right-side padding for the clear (X) button */
+.exceptions-search-field .v-field__clearable {
+  padding-right: 4px !important;
+}
+
+/* Hint text: matches placeholder verbatim, smaller and muted but still legible */
+.exceptions-search-field .v-messages__message {
+  font-size: var(--font-size-2xs) !important;
+  font-weight: 400;
+  opacity: 0.8;
+  letter-spacing: 0.01em;
+}
+
+/* Align hint text left edge with the magnify icon (both at 4px from field left) */
+.exceptions-search-field .v-input__details {
+  padding-inline-start: 32px !important;
+}
+
+/* Filter and sort: fixed widths sized to their widest option at 12px font */
 .exceptions-filter-select {
-  min-width: 168px;
-  flex-shrink: 0;
+  flex: 0 0 170px;
 }
 
 .exceptions-sort-select {
-  min-width: 196px;
-  flex-shrink: 0;
+  flex: 0 0 210px;
+}
+
+/*
+  Reduce Vuetify compact field height to match the original native input density.
+  Targets the inner input container so it doesn't affect the field's label/border.
+  padding-left adds 4px of breathing room before the text/icon in every control.
+*/
+.exceptions-controls .v-field__input {
+  min-height: 32px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  padding-left: 10px !important;
+  font-size: var(--font-size-sm) !important;
+}
+
+/*
+  Sort and Filter dropdown lists: match the 4px extra left indent of the
+  collapsed field so open-list item text aligns with the displayed value.
+  Font size and weight match the collapsed field label (.v-field__input).
+*/
+.exceptions-sort-menu .v-list-item,
+.exceptions-filter-menu .v-list-item {
+  padding-inline-start: 10px !important;
+}
+
+.exceptions-sort-menu .v-list-item-title,
+.exceptions-filter-menu .v-list-item-title {
+  font-size: var(--font-size-sm) !important;
+  font-weight: 400 !important;
 }
 
 .exceptions-feed {
@@ -698,8 +905,7 @@ body {
 }
 
 .exception-item:hover {
-  border-color: var(--color-border);
-  background-color: var(--color-surface);
+  border-color: var(--color-accent);
 }
 
 .exception-item:focus-visible {
@@ -762,7 +968,7 @@ body {
 .exception-item__region {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  padding: 2px var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
   background-color: var(--color-border);
   border-radius: var(--radius-full);
   white-space: nowrap;
@@ -780,7 +986,22 @@ body {
   transition: color var(--t-slow);
 }
 
-/* Priority chips — color handled via Vuetify's color prop (error/warning/success) */
+/* Priority chips — letter-spacing and weight to match the original badge style */
+/*
+  Scoped chip padding override: the global CSS reset (padding: 0) can win
+  over Vuetify's --v-chip-padding CSS variable in certain cascade contexts.
+  12px horizontal gives chips the same visual breathing room as their
+  top/bottom height-derived spacing.
+*/
+.navbar-appbar .v-chip,
+.dashboard__section .v-chip {
+  padding-inline: var(--sp-3) !important;
+}
+
+.v-chip.font-weight-black {
+  letter-spacing: 0.05em;
+  font-size: var(--font-size-xs) !important;
+}
 
 .exceptions-empty {
   padding: var(--sp-8);
@@ -821,13 +1042,14 @@ body {
 .bar-chart__bar {
   width: 100%;
   max-width: 72px;
-  background: linear-gradient(to top, #1e40af, var(--color-accent));
+  /* !important prevents Vuetify v-card color context from overriding the gradient */
+  background: linear-gradient(to top, #1e40af, var(--color-accent)) !important;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   min-height: 4px;
   transform-origin: bottom center;
   animation: bar-grow 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
   animation-delay: var(--bar-delay, 0s);
-  transition: max-width 0.2s, background var(--t-slow);
+  transition: max-width 0.2s;
 }
 
 @keyframes bar-grow {
@@ -837,7 +1059,7 @@ body {
 
 /* Today's bar highlighted */
 .bar-chart__group--today .bar-chart__bar {
-  background: linear-gradient(to top, #1d4ed8, #60a5fa);
+  background: linear-gradient(to top, #1d4ed8, #60a5fa) !important;
   box-shadow: 0 0 14px var(--color-accent-glow);
 }
 
@@ -877,6 +1099,11 @@ body {
    ============================================================ */
 
 /* Carrier cards are rendered inside v-row/v-col — .carrier-grid removed */
+
+/* Carrier section v-card: override Vuetify background so surface-raised tint applies */
+.v-card.carrier-card {
+  background-color: var(--color-surface-raised) !important;
+}
 
 .carrier-card {
   display: flex;
@@ -1077,7 +1304,7 @@ body {
   }
 
   .kpi-card {
-    background: #f8f8f8 !important;
+    background: var(--color-surface-raised) !important;
     border: 1px solid #ccc !important;
   }
 
@@ -1094,52 +1321,6 @@ body {
   .carrier-card {
     background: #f8f8f8 !important;
     border: 1px solid #ccc !important;
-    break-inside: avoid;
-  }
-
-  .bar-chart__bar {
-    background: #555 !important;
-    box-shadow: none !important;
-  }
-
-  .exceptions-feed {
-    max-height: none;
-    overflow: visible;
-  }
-}
-    gap: 12px;
-  }
-
-  .dashboard__section {
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    box-shadow: none;
-    break-inside: avoid;
-  }
-
-  .section-content--collapsed {
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  .kpi-card {
-    background: #f8f8f8;
-    border: 1px solid #ccc;
-  }
-
-  .kpi-card__value {
-    font-size: 22px;
-  }
-
-  .exception-item {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    break-inside: avoid;
-  }
-
-  .carrier-card {
-    background: #f8f8f8;
-    border: 1px solid #ccc;
     break-inside: avoid;
   }
 

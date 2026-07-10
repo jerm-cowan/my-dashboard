@@ -37,21 +37,24 @@
       >
         <v-text-field
           v-model="searchQuery"
-          type="search"
+          type="text"
           class="exceptions-search-field"
-          placeholder="Search exceptions…"
+          placeholder="Search: ID, issue type, region, time"
           aria-label="Search exceptions by ID, shipment, type, region, priority, or time open"
+          :hint="searchQuery ? 'Search: ID, issue type, region, time' : ''"
           prepend-inner-icon="mdi-magnify"
           variant="outlined"
           density="compact"
-          hide-details
+          hide-details="auto"
           clearable
           autocomplete="off"
+          @click:clear="searchQuery = ''"
         />
 
         <v-select
           v-model="filterValue"
           :items="filterItems"
+          :menu-props="{ class: 'exceptions-filter-menu' }"
           aria-label="Filter exceptions by region or priority"
           variant="outlined"
           density="compact"
@@ -62,6 +65,7 @@
         <v-select
           v-model="sortValue"
           :items="sortItems"
+          :menu-props="{ class: 'exceptions-sort-menu' }"
           aria-label="Sort exceptions"
           variant="outlined"
           density="compact"
@@ -98,7 +102,7 @@
               <span class="exception-item__shipment">{{ exc.shipmentId }}</span>
             </div>
             <v-chip
-              size="x-small"
+              size="small"
               variant="tonal"
               :color="priorityColor(exc.priority)"
               class="font-weight-black text-uppercase"
@@ -147,10 +151,10 @@ const filterItems = [
 /** Sort dropdown items. */
 const sortItems = [
   { title: 'Priority & Time Open', value: 'priority-time' },
+  { title: 'Time Open (Descending)', value: 'time' },
   { title: 'Exception ID', value: 'id' },
   { title: 'Shipment ID', value: 'shipment-id' },
   { title: 'Region', value: 'region' },
-  { title: 'Time Open (Desc)', value: 'time' },
 ]
 
 /** Applies current filter, search, and sort state to the exceptions dataset. */
@@ -169,7 +173,7 @@ const filteredData = computed((): Exception[] => {
   }
 
   // 2. Apply search query against all exception fields (case-insensitive)
-  const query = searchQuery.value.trim().toLowerCase()
+  const query = (searchQuery.value ?? '').trim().toLowerCase()
   if (query) {
     data = data.filter(
       (e) =>

@@ -18,7 +18,8 @@
       id="carriers-content"
     >
       <v-row
-        class="pa-6 pt-5 ma-0"
+        no-gutters
+        class="carrier-grid-row"
         id="carrier-grid"
         role="list"
         aria-label="Carrier performance snapshot"
@@ -29,7 +30,6 @@
           cols="12"
           sm="6"
           lg="3"
-          class="pa-2"
         >
           <v-card
             class="carrier-card animate-in"

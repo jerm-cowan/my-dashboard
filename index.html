@@ -11,8 +11,12 @@
   <script>
     (function () {
       var stored = localStorage.getItem('ff-theme')
-      var theme = stored === 'dark' || stored === 'light'
-        ? stored
+      // Support both the legacy 'dark'/'light' format and the current
+      // Vuetify theme-name format 'fastforwardDark'/'fastforwardLight'.
+      var isDark = stored === 'dark' || stored === 'fastforwardDark'
+      var isLight = stored === 'light' || stored === 'fastforwardLight'
+      var theme = isDark ? 'dark'
+        : isLight ? 'light'
         : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
       document.documentElement.setAttribute('data-theme', theme)
     })()

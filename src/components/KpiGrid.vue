@@ -18,17 +18,14 @@
       id="kpi-content"
     >
       <v-row
-        class="pa-6 pt-5 ma-0"
+        no-gutters
+        class="kpi-grid-row"
         role="list"
         aria-label="Key performance indicator summary cards"
       >
         <v-col
           v-for="(card, i) in cardDefs"
           :key="card.kpiKey"
-          cols="12"
-          sm="6"
-          lg="3"
-          class="pa-2"
         >
           <KpiCard
             v-bind="card"

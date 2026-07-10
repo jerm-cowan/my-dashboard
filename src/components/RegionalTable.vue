@@ -63,7 +63,7 @@
             </td>
             <td>
               <v-chip
-                size="x-small"
+                size="small"
                 variant="tonal"
                 :color="statusChipColor(row.status)"
               >

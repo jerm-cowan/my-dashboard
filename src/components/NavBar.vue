@@ -6,14 +6,14 @@
     role="banner"
     aria-label="FastForward Logistics dashboard navigation"
   >
-    <div class="navbar__brand ml-4">
-      <span class="navbar__logo" aria-label="FastForward Logistics">⚡ FastForward</span>
-      <span class="navbar__divider mx-4" aria-hidden="true"></span>
-      <span class="navbar__title">Operations Dashboard</span>
-    </div>
+    <div class="navbar__inner">
+      <div class="navbar__brand">
+        <span class="navbar__logo" aria-label="FastForward Logistics">⚡ FastForward</span>
+        <span class="navbar__divider" aria-hidden="true"></span>
+        <span class="navbar__title">Operations Dashboard</span>
+      </div>
 
-    <template #append>
-      <div class="d-flex align-center ga-4 mr-4">
+      <div class="navbar__meta">
         <v-chip
           color="primary"
           variant="tonal"
@@ -40,7 +40,7 @@
           @click="toggleTheme"
         />
       </div>
-    </template>
+    </div>
   </v-app-bar>
 </template>
 
