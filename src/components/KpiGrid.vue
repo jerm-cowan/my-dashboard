@@ -1,5 +1,5 @@
 <template>
-  <section class="dashboard__section" id="section-kpi" aria-labelledby="kpi-heading">
+  <v-card class="dashboard__section" id="section-kpi" aria-labelledby="kpi-heading">
     <div class="section-header">
       <h2 class="section-title" id="kpi-heading">Key Performance Indicators</h2>
       <button
@@ -17,17 +17,28 @@
       :class="{ 'section-content--collapsed': !isExpanded }"
       id="kpi-content"
     >
-      <div class="kpi-grid" role="list" aria-label="Key performance indicator summary cards">
-        <KpiCard
+      <v-row
+        class="pa-6 pt-5 ma-0"
+        role="list"
+        aria-label="Key performance indicator summary cards"
+      >
+        <v-col
           v-for="(card, i) in cardDefs"
           :key="card.kpiKey"
-          v-bind="card"
-          :delay="i * 0.07"
-          :refreshing="refreshing"
-          @show-tooltip="onShowTooltip"
-          @hide-tooltip="onHideTooltip"
-        />
-      </div>
+          cols="12"
+          sm="6"
+          lg="3"
+          class="pa-2"
+        >
+          <KpiCard
+            v-bind="card"
+            :delay="i * 0.07"
+            :refreshing="refreshing"
+            @show-tooltip="onShowTooltip"
+            @hide-tooltip="onHideTooltip"
+          />
+        </v-col>
+      </v-row>
     </div>
 
     <!-- Tooltip teleported to body so it renders above all other content -->
@@ -42,7 +53,7 @@
         {{ tooltip.text }}
       </div>
     </Teleport>
-  </section>
+  </v-card>
 </template>
 
 <script setup lang="ts">

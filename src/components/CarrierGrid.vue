@@ -1,5 +1,5 @@
 <template>
-  <section class="dashboard__section" id="section-carriers" aria-labelledby="carriers-heading">
+  <v-card class="dashboard__section" id="section-carriers" aria-labelledby="carriers-heading">
     <div class="section-header">
       <h2 class="section-title" id="carriers-heading">Carrier Performance</h2>
       <button
@@ -17,38 +17,50 @@
       :class="{ 'section-content--collapsed': !isExpanded }"
       id="carriers-content"
     >
-      <div class="carrier-grid" id="carrier-grid" role="list" aria-label="Carrier performance snapshot">
-        <article
+      <v-row
+        class="pa-6 pt-5 ma-0"
+        id="carrier-grid"
+        role="list"
+        aria-label="Carrier performance snapshot"
+      >
+        <v-col
           v-for="(carrier, i) in carrierData"
           :key="carrier.carrier"
-          class="carrier-card animate-in"
-          :style="{ '--delay': `${0.08 + i * 0.07}s` }"
-          role="listitem"
-          :aria-label="`${carrier.carrier}: ${carrier.shipments.toLocaleString()} shipments, ${carrier.onTimeRate}% on-time, trend ${carrier.trend}`"
+          cols="12"
+          sm="6"
+          lg="3"
+          class="pa-2"
         >
-          <div class="carrier-card__name">{{ carrier.carrier }}</div>
-          <div class="carrier-card__stats">
-            <div class="carrier-card__stat">
-              <span class="carrier-stat-label">Shipments</span>
-              <span class="carrier-stat-value">{{ carrier.shipments.toLocaleString() }}</span>
-            </div>
-            <div class="carrier-card__stat">
-              <span class="carrier-stat-label">On-Time</span>
+          <v-card
+            class="carrier-card animate-in"
+            :style="{ '--delay': `${0.08 + i * 0.07}s` }"
+            role="listitem"
+            :aria-label="`${carrier.carrier}: ${carrier.shipments.toLocaleString()} shipments, ${carrier.onTimeRate}% on-time, trend ${carrier.trend}`"
+          >
+            <div class="carrier-card__name">{{ carrier.carrier }}</div>
+            <div class="carrier-card__stats">
+              <div class="carrier-card__stat">
+                <span class="carrier-stat-label">Shipments</span>
+                <span class="carrier-stat-value">{{ carrier.shipments.toLocaleString() }}</span>
+              </div>
+              <div class="carrier-card__stat">
+                <span class="carrier-stat-label">On-Time</span>
+                <span
+                  class="carrier-stat-value"
+                  :class="`carrier-stat-value--${onTimeRateStatus(carrier.onTimeRate)}`"
+                >{{ carrier.onTimeRate }}%</span>
+              </div>
               <span
-                class="carrier-stat-value"
-                :class="`carrier-stat-value--${onTimeRateStatus(carrier.onTimeRate)}`"
-              >{{ carrier.onTimeRate }}%</span>
+                class="carrier-trend"
+                :class="`trend--${carrier.trend}`"
+                :aria-label="`Trend: ${trendLabel(carrier.trend)}`"
+              >{{ trendIcon(carrier.trend) }}</span>
             </div>
-            <span
-              class="carrier-trend"
-              :class="`trend--${carrier.trend}`"
-              :aria-label="`Trend: ${trendLabel(carrier.trend)}`"
-            >{{ trendIcon(carrier.trend) }}</span>
-          </div>
-        </article>
-      </div>
+          </v-card>
+        </v-col>
+      </v-row>
     </div>
-  </section>
+  </v-card>
 </template>
 
 <script setup lang="ts">

@@ -1,8 +1,9 @@
 <template>
-  <section
+  <v-card
     class="dashboard__section"
     id="section-exceptions"
     aria-labelledby="exceptions-heading"
+    height="100%"
   >
     <div class="section-header">
       <h2 class="section-title" id="exceptions-heading">
@@ -34,70 +35,39 @@
         role="group"
         aria-label="Search, filter, and sort exceptions"
       >
-        <div class="exceptions-search">
-          <span class="exceptions-search__icon" aria-hidden="true">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </span>
-          <input
-            v-model="searchQuery"
-            type="search"
-            id="exceptions-search-input"
-            class="exceptions-search__input"
-            placeholder="Search by"
-            aria-label="Search exceptions by ID, shipment, type, region, priority, or time open"
-            autocomplete="off"
-            spellcheck="false"
-          />
-        </div>
+        <v-text-field
+          v-model="searchQuery"
+          type="search"
+          class="exceptions-search-field"
+          placeholder="Search exceptions…"
+          aria-label="Search exceptions by ID, shipment, type, region, priority, or time open"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          hide-details
+          clearable
+          autocomplete="off"
+        />
 
-        <label for="exception-filter" class="sr-only">Filter exceptions by region or priority</label>
-        <select
+        <v-select
           v-model="filterValue"
-          class="filter-select"
-          id="exception-filter"
+          :items="filterItems"
           aria-label="Filter exceptions by region or priority"
-        >
-          <option value="all">All Exceptions</option>
-          <optgroup label="By Priority">
-            <option value="priority-HIGH">HIGH Priority</option>
-            <option value="priority-MEDIUM">MEDIUM Priority</option>
-            <option value="priority-LOW">LOW Priority</option>
-          </optgroup>
-          <optgroup label="By Region">
-            <option value="region-Northeast">Northeast</option>
-            <option value="region-Southeast">Southeast</option>
-            <option value="region-Midwest">Midwest</option>
-            <option value="region-Southwest">Southwest</option>
-            <option value="region-West Coast">West Coast</option>
-          </optgroup>
-        </select>
+          variant="outlined"
+          density="compact"
+          hide-details
+          class="exceptions-filter-select"
+        />
 
-        <label for="exception-sort" class="sr-only">Sort exceptions</label>
-        <select
+        <v-select
           v-model="sortValue"
-          class="filter-select"
-          id="exception-sort"
+          :items="sortItems"
           aria-label="Sort exceptions"
-        >
-          <option value="priority-time">Sort by: Priority &amp; Time Open</option>
-          <option value="id">Sort by: Exception ID (EXC-#####)</option>
-          <option value="shipment-id">Sort by: Shipment ID (SHP-#####)</option>
-          <option value="region">Sort by: Region</option>
-          <option value="time">Sort by: Time Open (Descending)</option>
-        </select>
+          variant="outlined"
+          density="compact"
+          hide-details
+          class="exceptions-sort-select"
+        />
       </div>
 
       <!-- Exceptions feed -->
@@ -127,7 +97,14 @@
               <span class="exception-item__id">{{ exc.id }}</span>
               <span class="exception-item__shipment">{{ exc.shipmentId }}</span>
             </div>
-            <span class="priority-badge" :class="priorityClass(exc.priority)">{{ exc.priority }}</span>
+            <v-chip
+              size="x-small"
+              variant="tonal"
+              :color="priorityColor(exc.priority)"
+              class="font-weight-black text-uppercase"
+            >
+              {{ exc.priority }}
+            </v-chip>
           </div>
           <div class="exception-item__body">
             <span class="exception-item__type">{{ exc.type }}</span>
@@ -137,7 +114,7 @@
         </article>
       </div>
     </div>
-  </section>
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -153,6 +130,28 @@ const filterValue = ref('all')
 const sortValue = ref('priority-time')
 
 const PRIORITY_ORDER: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 }
+
+/** Filter dropdown items — flattened Priority and Region groups. */
+const filterItems = [
+  { title: 'All Exceptions', value: 'all' },
+  { title: 'HIGH Priority', value: 'priority-HIGH' },
+  { title: 'MEDIUM Priority', value: 'priority-MEDIUM' },
+  { title: 'LOW Priority', value: 'priority-LOW' },
+  { title: 'Northeast', value: 'region-Northeast' },
+  { title: 'Southeast', value: 'region-Southeast' },
+  { title: 'Midwest', value: 'region-Midwest' },
+  { title: 'Southwest', value: 'region-Southwest' },
+  { title: 'West Coast', value: 'region-West Coast' },
+]
+
+/** Sort dropdown items. */
+const sortItems = [
+  { title: 'Priority & Time Open', value: 'priority-time' },
+  { title: 'Exception ID', value: 'id' },
+  { title: 'Shipment ID', value: 'shipment-id' },
+  { title: 'Region', value: 'region' },
+  { title: 'Time Open (Desc)', value: 'time' },
+]
 
 /** Applies current filter, search, and sort state to the exceptions dataset. */
 const filteredData = computed((): Exception[] => {
@@ -208,13 +207,13 @@ const filteredData = computed((): Exception[] => {
   return data
 })
 
-/** Maps a priority value to its CSS class. */
-function priorityClass(priority: string): string {
+/** Maps a priority value to its Vuetify color name. */
+function priorityColor(priority: string): string {
   const map: Record<string, string> = {
-    HIGH: 'priority--high',
-    MEDIUM: 'priority--medium',
-    LOW: 'priority--low',
+    HIGH: 'error',
+    MEDIUM: 'warning',
+    LOW: 'success',
   }
-  return map[priority] ?? 'priority--low'
+  return map[priority] ?? 'secondary'
 }
 </script>

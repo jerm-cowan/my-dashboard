@@ -1,5 +1,5 @@
 <template>
-  <section class="dashboard__section" id="section-trend" aria-labelledby="trend-heading">
+  <v-card class="dashboard__section" id="section-trend" aria-labelledby="trend-heading">
     <div class="section-header">
       <h2 class="section-title" id="trend-heading">Shipment Volume — 7-Day Trend</h2>
       <button
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </v-card>
 </template>
 
 <script setup lang="ts">

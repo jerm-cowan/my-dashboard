@@ -146,41 +146,22 @@ body {
    3. Navigation Bar
    ============================================================ */
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  height: var(--navbar-h);
-  background-color: var(--color-navbar-bg);
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition:
-    background-color var(--t-slow),
-    border-color var(--t-slow);
-}
+/* ============================================================
+   3. Navigation Bar (v-app-bar)
+   ============================================================ */
 
-/*
-  Inner wrapper: constrains content to the same max-width and horizontal padding
-  as the dashboard grid, so the logo left-aligns with section content and the
-  meta items right-align with section content — not the browser edge.
-*/
-.navbar__inner {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--dash-pad);
+/* Semi-transparent backdrop on the Vuetify app-bar */
+.navbar-appbar {
+  background-color: var(--color-navbar-bg) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  transition: background-color var(--t-slow), border-color var(--t-slow) !important;
 }
 
 .navbar__brand {
   display: flex;
   align-items: center;
-  gap: var(--sp-4);
   min-width: 0;
 }
 
@@ -213,13 +194,6 @@ body {
   transition: color var(--t-slow);
 }
 
-.navbar__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-4);
-  flex-shrink: 0;
-}
-
 .navbar__timestamp {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
@@ -228,35 +202,16 @@ body {
   transition: color var(--t-slow);
 }
 
-/* Status pill with animated pulse dot */
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-1) var(--sp-3);
-  background-color: var(--color-accent-dim);
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  color: var(--color-accent);
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition:
-    background-color var(--t-slow),
-    border-color var(--t-slow),
-    color var(--t-slow);
-}
-
+/* Animated pulse dot on the Mock Data chip */
 .status-pill::before {
   content: '';
   display: inline-block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--color-accent);
+  background-color: currentColor;
   flex-shrink: 0;
+  margin-right: 4px;
   animation: pulse-dot 2.4s ease infinite;
 }
 
@@ -266,100 +221,65 @@ body {
 }
 
 /* ============================================================
-   4. Theme Toggle Button
+   4. Dashboard Layout (v-main + v-container + v-row)
    ============================================================ */
 
-.theme-toggle {
+/* v-container fluid: constrain to brief's max-width with consistent padding */
+.dashboard-container {
+  max-width: var(--max-w) !important;
+  padding: var(--sp-6) var(--dash-pad) var(--sp-12) !important;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--sp-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface-raised);
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  line-height: 1;
-  flex-shrink: 0;
-  transition:
-    border-color var(--t-fast),
-    background-color var(--t-fast),
-    transform var(--t-fast);
-}
-
-.theme-toggle:hover {
-  border-color: var(--color-accent);
-  background-color: var(--color-accent-dim);
-  transform: scale(1.06);
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.theme-toggle__icon {
-  display: block;
-  transition: transform var(--t-base);
-}
-
-/* ============================================================
-   5. Dashboard Layout Grid
-   ============================================================ */
-
-.dashboard {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding:
-    calc(var(--navbar-h) + var(--sp-6))
-    var(--dash-pad)
-    var(--sp-12)
-    var(--dash-pad);
-  display: grid;
-  grid-template-columns: 1fr;
+  flex-direction: column;
   gap: var(--section-gap);
 }
 
-/* Two-column row: regional table (left) + exceptions feed (right) */
+/* Two-column row: Regional (left) + Exceptions (right) — v-row override */
 .dashboard__row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--section-gap);
+  gap: var(--section-gap) !important;
   align-items: stretch;
-  /* Animate column width changes when a drawer panel opens/closes */
-  transition: grid-template-columns var(--t-slow);
 }
 
-/*
-  Drawer layout — left panel collapsed:
-  Left section shrinks to a 52px vertical strip; right section fills the row.
-*/
-.dashboard__row--left-collapsed {
-  grid-template-columns: 52px 1fr;
+/* Both cols default to equal flex width */
+.dashboard__col-left,
+.dashboard__col-right {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  transition: flex var(--t-slow), max-width var(--t-slow);
 }
 
-/*
-  Drawer layout — right panel collapsed:
-  Right section shrinks to a 52px vertical strip; left section fills the row.
-*/
-.dashboard__row--right-collapsed {
-  grid-template-columns: 1fr 52px;
+/* Drawer: left panel collapsed → 52px vertical strip */
+.dashboard__row--left-collapsed .dashboard__col-left {
+  flex: 0 0 52px !important;
+  max-width: 52px !important;
 }
+
+/* Drawer: right panel collapsed → 52px vertical strip */
+.dashboard__row--right-collapsed .dashboard__col-right {
+  flex: 0 0 52px !important;
+  max-width: 52px !important;
+}
+
+/* Fixed print/export FAB */
+.print-fab {
+  position: fixed !important;
+  bottom: var(--sp-6) !important;
+  right: var(--sp-6) !important;
+  z-index: 100;
+}
+
+
 
 /* ============================================================
-   6. Section Card Wrapper
+   5. Section Card Wrapper (v-card)
    ============================================================ */
 
+/* v-card provides the surface background; we add border, radius, overflow */
 .dashboard__section {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
   overflow: hidden;
-  box-shadow: var(--shadow-card);
-  transition:
-    background-color var(--t-slow),
-    border-color var(--t-slow),
-    box-shadow var(--t-slow);
+  transition: border-color var(--t-slow);
 }
 
 .section-header {
@@ -462,84 +382,63 @@ body {
 }
 
 /* ── Row section: caret direction overrides ─────────────────────────────────
-   Left panel (Regional): expanded = caret points LEFT; collapsed = points RIGHT (inward).
-   Right panel (Exceptions): expanded = caret points RIGHT; collapsed = points LEFT (inward).
-   ▾ rotated  90deg CW = ◂ (left)
-   ▾ rotated -90deg CCW = ▸ (right)
-   These rules have higher specificity than the generic .section-toggle rules above.
+   Left col (Regional): expanded = caret points LEFT; collapsed = points RIGHT.
+   Right col (Exceptions): expanded = caret points RIGHT; collapsed = points LEFT.
    ──────────────────────────────────────────────────────────────────────────── */
 
-.dashboard__row > .dashboard__section:first-child .section-toggle span {
+.dashboard__row .dashboard__col-left .section-toggle span {
   transform: rotate(90deg); /* expanded: ◂ points left */
 }
-.dashboard__row > .dashboard__section:first-child .section-toggle[aria-expanded="false"] span {
+.dashboard__row .dashboard__col-left .section-toggle[aria-expanded="false"] span {
   transform: rotate(-90deg); /* collapsed: ▸ points right (inward) */
 }
 
-.dashboard__row > .dashboard__section:last-child .section-toggle span {
+.dashboard__row .dashboard__col-right .section-toggle span {
   transform: rotate(-90deg); /* expanded: ▸ points right */
 }
-.dashboard__row > .dashboard__section:last-child .section-toggle[aria-expanded="false"] span {
+.dashboard__row .dashboard__col-right .section-toggle[aria-expanded="false"] span {
   transform: rotate(90deg); /* collapsed: ◂ points left (inward) */
 }
 
 /* ── Drawer strip: collapsed panel becomes a narrow vertical tab ────────────
-   The collapsed section fills the full row height (via CSS Grid stretch).
-   Its header rotates to display the section title vertically, bottom-to-top.
    ──────────────────────────────────────────────────────────────────────────── */
 
-.dashboard__row--left-collapsed > .dashboard__section:first-child .section-header,
-.dashboard__row--right-collapsed > .dashboard__section:last-child .section-header {
-  /* Fill the full stretched height of the grid row */
+.dashboard__row--left-collapsed .dashboard__col-left .section-header,
+.dashboard__row--right-collapsed .dashboard__col-right .section-header {
   height: 100%;
-  /* Caret above label: column-reverse puts DOM-last (.section-toggle) at top */
   flex-direction: column-reverse;
   align-items: center;
   justify-content: center;
   gap: var(--sp-4);
-  /* Remove horizontal separator — section border already frames the strip */
   border-bottom: none;
-  /* Compact horizontal padding for the narrow strip */
   padding: var(--sp-6) var(--sp-2);
 }
 
-.dashboard__row--left-collapsed > .dashboard__section:first-child .section-title,
-.dashboard__row--right-collapsed > .dashboard__section:last-child .section-title {
-  /* Rotate text to read bottom-to-top (vertical-rl + 180deg = bottom-to-top) */
+.dashboard__row--left-collapsed .dashboard__col-left .section-title,
+.dashboard__row--right-collapsed .dashboard__col-right .section-title {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
-  /* Remove horizontal gap — layout is now vertical */
   gap: 0;
 }
 
-/* The live count badge doesn't render well in a narrow strip — hide it */
-.dashboard__row--right-collapsed > .dashboard__section:last-child .section-title__count {
+.dashboard__row--right-collapsed .dashboard__col-right .section-title__count {
   display: none;
 }
 
-/* ── Expanded panel elevation ───────────────────────────────────────────────
-   The expanded panel in the pair gets a raised shadow to visually sit above
-   the collapsed drawer strip, emphasising it as the active surface.
-   ──────────────────────────────────────────────────────────────────────────── */
-
-.dashboard__row--left-collapsed > .dashboard__section:last-child,
-.dashboard__row--right-collapsed > .dashboard__section:first-child {
+/* Expanded panel gets raised shadow */
+.dashboard__row--left-collapsed .dashboard__col-right .dashboard__section,
+.dashboard__row--right-collapsed .dashboard__col-left .dashboard__section {
   position: relative;
   z-index: 1;
   box-shadow: var(--shadow-raised);
 }
 
 /* ============================================================
-   7. KPI Grid & Cards
+   6. KPI Grid & Cards
    ============================================================ */
 
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-4);
-  padding: var(--sp-6);
-}
+/* KPI cards are rendered inside v-row/v-col — .kpi-grid removed */
 
 .kpi-card {
   position: relative;
@@ -653,7 +552,7 @@ body {
 }
 
 /* ============================================================
-   8. Trend & Status Color Utilities
+   7. Trend & Status Color Utilities
    ============================================================ */
 
 .trend--up   { color: var(--color-success); }
@@ -661,70 +560,43 @@ body {
 .trend--flat { color: var(--color-text-muted); }
 
 /* ============================================================
-   9. Regional Performance Table
+   8. Regional Performance Table (v-table)
    ============================================================ */
 
-.table-wrapper {
-  padding: var(--sp-4) var(--sp-6) var(--sp-6);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--font-size-base);
-}
-
-.data-table thead th {
-  padding: var(--sp-3) var(--sp-4);
-  text-align: left;
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-bottom: 1px solid var(--color-border);
+/* Override v-table thead to match dashboard typography */
+.regional-table thead th {
+  padding: var(--sp-3) var(--sp-4) !important;
+  font-size: var(--font-size-xs) !important;
+  font-weight: 700 !important;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  border-bottom: 1px solid var(--color-border) !important;
   white-space: nowrap;
-  transition: color var(--t-slow), border-color var(--t-slow);
 }
 
-.data-table thead th.col-num {
-  text-align: right;
-}
-
-.data-table tbody tr {
-  border-bottom: 1px solid var(--color-border-subtle);
+.regional-table tbody tr {
+  border-bottom: 1px solid var(--color-border-subtle) !important;
   transition: background-color var(--t-fast);
 }
 
-.data-table tbody tr:last-child {
-  border-bottom: none;
+.regional-table tbody tr:last-child {
+  border-bottom: none !important;
 }
 
-.data-table tbody tr:hover {
-  background-color: var(--color-surface-raised);
-}
-
-.data-table tbody tr:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-  border-radius: var(--radius-sm);
-}
-
-.data-table td {
-  padding: var(--sp-3) var(--sp-4);
+.regional-table tbody td {
+  padding: var(--sp-3) var(--sp-4) !important;
   vertical-align: middle;
-  transition: color var(--t-slow);
 }
 
+
+/* Table cell formatting — shared by regional table rows */
 .table-cell--region {
   font-weight: 600;
   color: var(--color-text-primary);
 }
 
 .table-cell--number {
-  text-align: right;
   font-variant-numeric: tabular-nums;
   color: var(--color-text-primary);
 }
@@ -759,78 +631,38 @@ body {
   color: var(--color-text-muted);
 }
 
-/* Status badges */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  white-space: nowrap;
-  transition:
-    background-color var(--t-slow),
-    color var(--t-slow);
-}
-
-.badge--success {
-  background-color: var(--color-success-dim);
-  color: var(--color-success);
-}
-
-.badge--warning {
-  background-color: var(--color-warning-dim);
-  color: var(--color-warning);
-}
-
-.badge--danger {
-  background-color: var(--color-danger-dim);
-  color: var(--color-danger);
-}
+/* Status chips (v-chip) — color handled via Vuetify's color prop */
 
 /* ============================================================
-   10. Exceptions Feed
+   9. Exceptions Feed
    ============================================================ */
 
-.filter-select {
-  padding: var(--sp-2) var(--sp-3);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-family: var(--font-family);
-  font-weight: 500;
-  cursor: pointer;
-  /* Prevent selects from collapsing below their content */
-  max-width: 100%;
-  transition:
-    border-color var(--t-fast),
-    background-color var(--t-slow),
-    color var(--t-slow);
+/* Controls row: search (flex-grow) → filter → sort */
+.exceptions-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+  flex-wrap: wrap;
+  transition: border-color var(--t-slow);
 }
 
-/* Sort dropdown: wide enough for its longest option "Sort by: Shipment ID (SHP-#####)" */
-#exception-sort {
-  min-width: 244px;
-  flex-shrink: 0;
-}
-
-/* Filter dropdown: wide enough for "All Exceptions" + optgroup options */
-#exception-filter {
+/* Search field fills remaining space */
+.exceptions-search-field {
+  flex: 1;
   min-width: 160px;
+}
+
+/* Filter and sort selects have fixed minimum widths */
+.exceptions-filter-select {
+  min-width: 168px;
   flex-shrink: 0;
 }
 
-.filter-select:hover {
-  border-color: var(--color-accent);
-}
-
-.filter-select:focus {
-  border-color: var(--color-accent);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-accent-dim);
+.exceptions-sort-select {
+  min-width: 196px;
+  flex-shrink: 0;
 }
 
 .exceptions-feed {
@@ -948,24 +780,7 @@ body {
   transition: color var(--t-slow);
 }
 
-/* Priority badges */
-.priority-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--sp-1) var(--sp-2);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-  transition:
-    background-color var(--t-slow),
-    color var(--t-slow);
-}
-
-.priority--high   { background-color: var(--color-danger-dim);  color: var(--color-danger);  }
-.priority--medium { background-color: var(--color-warning-dim); color: var(--color-warning); }
-.priority--low    { background-color: var(--color-success-dim); color: var(--color-success); }
+/* Priority chips — color handled via Vuetify's color prop (error/warning/success) */
 
 .exceptions-empty {
   padding: var(--sp-8);
@@ -974,85 +789,8 @@ body {
   font-size: var(--font-size-sm);
 }
 
-/* Controls row: search (flex-grow) → filter → sort, all in one line */
-.exceptions-controls {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-6);
-  border-bottom: 1px solid var(--color-border-subtle);
-  flex-wrap: wrap;
-  transition: border-color var(--t-slow);
-}
-
-.exceptions-search {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 160px;
-}
-
-.exceptions-search__icon {
-  position: absolute;
-  left: var(--sp-3);
-  display: flex;
-  align-items: center;
-  color: var(--color-text-muted);
-  pointer-events: none;
-  flex-shrink: 0;
-  transition: color var(--t-slow);
-}
-
-.exceptions-search__input {
-  width: 100%;
-  padding: var(--sp-2) var(--sp-3) var(--sp-2) calc(var(--sp-3) + 14px + var(--sp-2));
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-family: var(--font-family);
-  font-weight: 400;
-  line-height: 1.5;
-  transition:
-    border-color var(--t-fast),
-    background-color var(--t-slow),
-    color var(--t-slow);
-  /* Remove browser default search-input styling */
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.exceptions-search__input::placeholder {
-  color: var(--color-text-faint);
-}
-
-.exceptions-search__input:hover {
-  border-color: var(--color-border);
-}
-
-.exceptions-search__input:focus {
-  border-color: var(--color-accent);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-accent-dim);
-}
-
-/* Hide the browser's built-in × clear button; we rely on the search event */
-.exceptions-search__input::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-size: 14px 14px;
-  cursor: pointer;
-  opacity: 1;
-}
-
 /* ============================================================
-   11. Shipment Volume Bar Chart
+   10. Shipment Volume Bar Chart
    ============================================================ */
 
 .bar-chart {
@@ -1135,15 +873,10 @@ body {
 }
 
 /* ============================================================
-   12. Carrier Performance Cards
+   11. Carrier Performance Cards
    ============================================================ */
 
-.carrier-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-4);
-  padding: var(--sp-6);
-}
+/* Carrier cards are rendered inside v-row/v-col — .carrier-grid removed */
 
 .carrier-card {
   display: flex;
@@ -1251,51 +984,7 @@ body {
 }
 
 /* ============================================================
-   14. Print / Export Button
-   ============================================================ */
-
-.print-btn {
-  position: fixed;
-  bottom: var(--sp-6);
-  right: var(--sp-6);
-  z-index: 100;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-3) var(--sp-5);
-  background-color: var(--color-accent);
-  border: none;
-  border-radius: var(--radius-md);
-  color: #fff;
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  font-family: var(--font-family);
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  box-shadow: var(--shadow-raised), 0 0 0 1px rgba(255,255,255,0.08) inset;
-  transition:
-    background-color var(--t-fast),
-    transform var(--t-fast),
-    box-shadow var(--t-fast);
-}
-
-.print-btn:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-raised), 0 0 16px var(--color-accent-glow);
-}
-
-.print-btn:active {
-  transform: translateY(0);
-}
-
-.print-btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-}
-
-/* ============================================================
-   15. Entrance Animations
+   13. Entrance Animations
    ============================================================ */
 
 @keyframes fade-in-up {
@@ -1315,27 +1004,12 @@ body {
 }
 
 /* ============================================================
-   16. Responsive Adjustments (baseline ≥ 1024px)
+   14. Responsive Adjustments (baseline ≥ 1024px)
    ============================================================ */
-
-@media (max-width: 1280px) {
-  /* Stack the row when neither drawer modifier is active */
-  .dashboard__row:not(.dashboard__row--left-collapsed):not(.dashboard__row--right-collapsed) {
-    grid-template-columns: 1fr;
-  }
-
-  .carrier-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
 @media (max-width: 1024px) {
   :root {
     --dash-pad: 1rem;
-  }
-
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   .navbar__timestamp {
@@ -1348,31 +1022,20 @@ body {
 }
 
 @media (max-width: 600px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .carrier-grid {
-    grid-template-columns: 1fr;
-  }
-
   .navbar__title {
     display: none;
   }
 }
 
 /* ============================================================
-   17. Print Styles
+   15. Print Styles
    ============================================================ */
 
 @media print {
-  .navbar,
-  .print-btn,
+  .v-app-bar,
+  .print-fab,
   .section-toggle,
-  .filter-select,
-  .theme-toggle,
-  .tooltip,
-  .status-pill::before {
+  .tooltip {
     display: none !important;
   }
 
@@ -1395,9 +1058,55 @@ body {
     print-color-adjust: exact;
   }
 
-  .dashboard {
-    padding: 12px;
-    max-width: 100%;
+  .dashboard-container {
+    padding: 12px !important;
+    max-width: 100% !important;
+    gap: 12px;
+  }
+
+  .dashboard__section {
+    border: 1px solid #bbb !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .section-content--collapsed {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .kpi-card {
+    background: #f8f8f8 !important;
+    border: 1px solid #ccc !important;
+  }
+
+  .kpi-card__value {
+    font-size: 22px;
+  }
+
+  .exception-item {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+
+  .carrier-card {
+    background: #f8f8f8 !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+
+  .bar-chart__bar {
+    background: #555 !important;
+    box-shadow: none !important;
+  }
+
+  .exceptions-feed {
+    max-height: none;
+    overflow: visible;
+  }
+}
     gap: 12px;
   }
 

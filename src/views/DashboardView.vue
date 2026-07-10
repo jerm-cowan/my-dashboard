@@ -1,35 +1,49 @@
 <template>
   <NavBar />
 
-  <main class="dashboard" id="main-content" role="main" aria-label="Operations Dashboard">
-    <!-- KPI Summary Row -->
-    <KpiGrid />
-
-    <!-- Two-column row: Regional Performance (left) + Open Exceptions (right) -->
-    <div
-      class="dashboard__row"
-      :class="rowClass"
+  <v-main>
+    <v-container
+      fluid
+      class="dashboard-container"
+      id="main-content"
+      role="main"
+      aria-label="Operations Dashboard"
     >
-      <RegionalTable v-model:expanded="regionalExpanded" />
-      <ExceptionsFeed v-model:expanded="exceptionsExpanded" />
-    </div>
+      <!-- KPI Summary Row -->
+      <KpiGrid />
 
-    <!-- Shipment Volume 7-Day Trend -->
-    <VolumeChart />
+      <!-- Two-column row: Regional Performance (left) + Open Exceptions (right) -->
+      <v-row
+        class="dashboard__row"
+        :class="rowClass"
+        no-gutters
+      >
+        <v-col class="dashboard__col-left">
+          <RegionalTable v-model:expanded="regionalExpanded" />
+        </v-col>
+        <v-col class="dashboard__col-right">
+          <ExceptionsFeed v-model:expanded="exceptionsExpanded" />
+        </v-col>
+      </v-row>
 
-    <!-- Carrier Performance Snapshot -->
-    <CarrierGrid />
-  </main>
+      <!-- Shipment Volume 7-Day Trend -->
+      <VolumeChart />
+
+      <!-- Carrier Performance Snapshot -->
+      <CarrierGrid />
+    </v-container>
+  </v-main>
 
   <!-- Fixed print/export button -->
-  <button
-    class="print-btn"
-    id="print-btn"
+  <v-btn
+    color="primary"
+    class="print-fab"
+    prepend-icon="mdi-printer"
     aria-label="Print or export dashboard view"
     @click="printDashboard"
   >
-    <span aria-hidden="true">🖨</span> Export
-  </button>
+    Export
+  </v-btn>
 </template>
 
 <script setup lang="ts">
@@ -47,7 +61,7 @@ const exceptionsExpanded = ref(true)
 /**
  * Returns the drawer modifier class for the 2-column row based on which panel
  * is collapsed. When neither or both are collapsed, no modifier is applied and
- * the row uses the default 1fr/1fr split.
+ * the row uses the default equal-width split.
  */
 const rowClass = computed(() => {
   if (!regionalExpanded.value && exceptionsExpanded.value) return 'dashboard__row--left-collapsed'

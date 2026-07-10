@@ -1,35 +1,54 @@
 <template>
-  <header class="navbar" role="banner" aria-label="FastForward Logistics dashboard navigation">
-    <div class="navbar__inner">
-      <div class="navbar__brand">
-        <span class="navbar__logo" aria-label="FastForward Logistics">⚡ FastForward</span>
-        <span class="navbar__divider" aria-hidden="true"></span>
-        <span class="navbar__title">Operations Dashboard</span>
-      </div>
+  <v-app-bar
+    :elevation="0"
+    color="transparent"
+    class="navbar-appbar"
+    role="banner"
+    aria-label="FastForward Logistics dashboard navigation"
+  >
+    <div class="navbar__brand ml-4">
+      <span class="navbar__logo" aria-label="FastForward Logistics">⚡ FastForward</span>
+      <span class="navbar__divider mx-4" aria-hidden="true"></span>
+      <span class="navbar__title">Operations Dashboard</span>
+    </div>
 
-      <div class="navbar__meta">
-        <span class="status-pill" aria-label="Data source: Mock Data">Mock Data</span>
+    <template #append>
+      <div class="d-flex align-center ga-4 mr-4">
+        <v-chip
+          color="primary"
+          variant="tonal"
+          size="small"
+          aria-label="Data source: Mock Data"
+          class="status-pill"
+        >
+          Mock Data
+        </v-chip>
+
         <time
           class="navbar__timestamp"
           :datetime="isoTime"
           aria-live="polite"
           aria-label="Current date and time"
         >{{ displayTime }}</time>
-        <button
-          class="theme-toggle"
+
+        <v-btn
+          :icon="themeIcon"
           :aria-label="themeLabel"
-          title="Toggle theme"
+          variant="outlined"
+          density="comfortable"
+          size="small"
           @click="toggleTheme"
-        >
-          <span class="theme-toggle__icon" aria-hidden="true">{{ themeIcon }}</span>
-        </button>
+        />
       </div>
-    </div>
-  </header>
+    </template>
+  </v-app-bar>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useTheme } from 'vuetify'
+
+const vuetifyTheme = useTheme()
 
 /** Formats the current date and time for display in the navbar. */
 function formatTimestamp(): string {
@@ -49,39 +68,39 @@ function formatTimestamp(): string {
 
 const displayTime = ref(formatTimestamp())
 const isoTime = ref(new Date().toISOString())
-const theme = ref<'dark' | 'light'>('dark')
 
-const themeLabel = computed(() =>
-  theme.value === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
-)
-const themeIcon = computed(() => (theme.value === 'dark' ? '☀️' : '🌙'))
-
-/** Reads the stored theme preference or falls back to the OS setting. */
-function resolveInitialTheme(): 'dark' | 'light' {
-  const stored = localStorage.getItem('ff-theme')
-  if (stored === 'dark' || stored === 'light') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
+const isDark = computed(() => vuetifyTheme.global.name.value === 'fastforwardDark')
+const themeLabel = computed(() => isDark.value ? 'Switch to light mode' : 'Switch to dark mode')
+const themeIcon = computed(() => isDark.value ? 'mdi-weather-sunny' : 'mdi-weather-night')
 
 /**
- * Applies a theme by setting the data-theme attribute on <html>
- * and persisting the preference in localStorage.
+ * Toggles between the dark and light Vuetify themes and persists the
+ * preference. Also syncs the data-theme attribute so CSS variables update.
  */
-function applyTheme(t: 'dark' | 'light') {
-  theme.value = t
-  document.documentElement.setAttribute('data-theme', t)
-  localStorage.setItem('ff-theme', t)
-}
-
-/** Toggles between dark and light themes. */
 function toggleTheme() {
-  applyTheme(theme.value === 'dark' ? 'light' : 'dark')
+  const next = isDark.value ? 'fastforwardLight' : 'fastforwardDark'
+  vuetifyTheme.global.name.value = next
+  document.documentElement.setAttribute('data-theme', next === 'fastforwardLight' ? 'light' : 'dark')
+  localStorage.setItem('ff-theme', next)
 }
 
 let timestampInterval: ReturnType<typeof setInterval>
 
 onMounted(() => {
-  applyTheme(resolveInitialTheme())
+  // Restore persisted theme preference or fall back to OS preference
+  const stored = localStorage.getItem('ff-theme')
+  let themeName: 'fastforwardDark' | 'fastforwardLight'
+
+  if (stored === 'fastforwardDark' || stored === 'fastforwardLight') {
+    themeName = stored
+  } else {
+    themeName = window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'fastforwardDark'
+      : 'fastforwardLight'
+  }
+
+  vuetifyTheme.global.name.value = themeName
+  document.documentElement.setAttribute('data-theme', themeName === 'fastforwardLight' ? 'light' : 'dark')
 
   timestampInterval = setInterval(() => {
     displayTime.value = formatTimestamp()

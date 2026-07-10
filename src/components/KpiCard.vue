@@ -1,12 +1,12 @@
 <template>
-  <article
+  <v-card
     class="kpi-card animate-in"
     :class="[`kpi-card--${status}`, { 'kpi-card--refreshing': refreshing }]"
     :style="{ '--delay': `${delay}s` }"
-    role="listitem"
-    tabindex="0"
     :data-kpi="kpiKey"
     :aria-label="`${label}: ${formattedValue}`"
+    tabindex="0"
+    role="listitem"
     @mouseenter="$emit('show-tooltip', ($el as HTMLElement), tooltipText)"
     @mouseleave="$emit('hide-tooltip')"
     @focus="$emit('show-tooltip', ($el as HTMLElement), tooltipText)"
@@ -30,7 +30,7 @@
     </div>
     <span class="kpi-card__sublabel">{{ sublabel }}</span>
     <div class="kpi-card__accent-bar" aria-hidden="true"></div>
-  </article>
+  </v-card>
 </template>
 
 <script setup lang="ts">
