@@ -9,7 +9,8 @@
 **Stakeholder:** VP of Operations
 **Use Case:** Internal leadership dashboard — displayed during executive meetings and used for daily ops monitoring
 **Engagement Type:** Prototype / Proof of Concept
-**Developer Stack:** Vue 3, Vite, TypeScript, and Vue Router. No component libraries at this stage (Vuetify and other libraries will be evaluated during future iterations).
+**Developer Stack:** Vue 3, Vite, TypeScript, Vue Router, and Vuetify 3.
+Use Vuetify components and default patterns wherever appropriate.
 
 ### Framework Upgrade
 
@@ -17,7 +18,7 @@ This project originally began as a vanilla HTML/CSS/JavaScript prototype during 
 
 During Step 2.2, the project transitions to Vue 3 using Vite, TypeScript, and Vue Router. The goal is to retain all existing dashboard requirements while moving to a component-based architecture that can support future enhancements.
 
-**Step 2.2 is complete.** The legacy vanilla files (`app.js`, `data.js`, `styles.css`) remain in the repository root as a historical reference for the v201 tag. All active development now lives in `src/`.
+All active development now lives in `src/`.
 
 ### Vue Project Setup Requirements
 
@@ -62,6 +63,8 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 - Vite
 - TypeScript
 - Vue Router
+- Vuetify 3
+- GitHub Copilot
 
 ### Expected Project Structure
 
@@ -96,13 +99,14 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 
 ### Vue and TypeScript Guidelines
 - Use **ES6+** syntax throughout (`const`, `let`, arrow functions, destructuring, template literals)
-- All mock data lives in `data.js` and is imported via ES module `type="module"`
-- Use TypeScript throughout the application
+- Mock data lives in `src/data/`
 - Prefer Composition API and <script setup>
 - Create reusable Vue components where appropriate
 - Use Vue Router for application routing even if the initial dashboard is primarily a single view
 - Keep mock data separate from presentation logic
-- Structure components so future Vuetify migration is possible
+- Use Vuetify 3 as the primary UI framework.
+- Prefer built-in Vuetify components before creating custom UI elements.
+- Only create custom components when reusable business-specific functionality is required.
 - Add **JSDoc comments** on all functions for clarity and Copilot context
 - Structure data so it could realistically be replaced with a `fetch()` call
 
@@ -113,7 +117,7 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 
 ### CSS Guidelines
 - Use **CSS custom properties** (variables) for all colors, spacing, and typography
-- Use **CSS Grid** for the overall dashboard layout
+- Prefer Vuetify layout components (v-container, v-row, v-col) for page structure. Use custom CSS only when Vuetify layout capabilities are insufficient.
 - Use **Flexbox** for component-level alignment
 - Mobile layout is not required but the layout should not break below 1024px
 - Include a **dark professional color scheme** appropriate for an ops/logistics brand
@@ -125,7 +129,10 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 ### Visual Tone
 Dark, data-dense, and authoritative. Think mission control meets enterprise SaaS. This is not a consumer product — it should feel like a tool built for professionals who trust data.
 
-### Color Palette (CSS Variables to Define)
+### Color Palette (Vuetify Theme Tokens)
+- Use these colors as the application's Vuetify theme configuration.
+- Prefer Vuetify theme tokens and component styling over custom CSS wherever practical.
+
 | Variable | Purpose | Suggested Value |
 |---|---|---|
 | `--color-bg` | Page background | `#0f1117` |
@@ -182,12 +189,6 @@ A styled HTML table showing performance by region:
 | Southwest | 743 | 85.3% | 9 | 🟡 At Risk |
 | West Coast | 784 | 93.8% | 5 | 🟢 On Track |
 
-Expandable/collapsible behavior on sections with 2 columnn layout in a row:
-- The expand/collapse caret should point to the left on the left column section and point right on right column section.
-- Expanding collapse the section but to the left for the left column and to the right for the right column section, filling the height to match the other column section. The expanded section should have a subtle shadow to indicate it is above the other section.
-- collapsed sections should have the caret pointing back to the inside and the label should rotate 90 degrees to be vertical and read from bottom to top. The label should be positioned centered like before and the padding remain the same. It is simply rotating 90 degrees.
-- The caret should be a be a positioned in centerthe label to appear as a side drawer style toggle and appear above the label. Ensure the posisition relative to the corner of the section and the label is consistent for both left and right column sections, and with same padding and spacing. For example, if the left column is expanded and the right column collapsed, the carets should align and have consistent spacing in their sections.
-- The remaining column should expand to fill the remaining width of the row and maintain the same height as the expanded section. The expanded section should have a subtle shadow to indicate it is above the other section.
 
 #### 4. ⚠️ Open Exceptions Feed
 A scrollable list/feed of active exceptions. Each item should show:
@@ -198,26 +199,25 @@ A scrollable list/feed of active exceptions. Each item should show:
 - Time open (e.g. *"14 hrs"*)
 - Priority badge: `HIGH` / `MEDIUM` / `LOW`
 
-Add a sort functionality
+Open Exceptions Feed - Add a sort functionality
 - Match the All Exceptions dropdown format and give label "Sort by: Priority & Time Open" as the default sort option
     - This will sort by Priority (High → Low) and Time Open (Longest → Shortest) 
 - Additional Sort by options: exception ID (EXC-#####), Shipment ID (SHP-#####), region, or time open (descending).
-- Any instance of a lable "Longest → Shortest" should be labeled as "Descending" instead, and "Shortest → Longest" should be labeled as "Ascending".
+- Any instance of a label "Longest → Shortest" should be labeled as "Descending" instead, and "Shortest → Longest" should be labeled as "Ascending".
 
-Add a search bar to filter the exceptions feed by any data point or text string. The search should be case-insensitive and update the feed in real time as the user types.
+Open Exceptions Feed - Add a search bar
+- Filter the exceptions feed by any data point or text string. The search should be case-insensitive and update the feed in real time as the user types.
 - search bar should have a placeholder text: "Search by" and a magnifying glass icon on the left side of the input field. The search bar should be styled to match the overall dashboard theme and should be positioned above the exceptions feed.
 
-Filter, sort, and search behavior and location:
+Open Exceptions Feed - Filter, sort, and search behavior and location:
 - Search bar, filter drop down, and sort dropddown should have consistent styling, container height.
 - These should all work together seamlessly. For example, if a user has filtered by region and then searches for a specific exception ID, the feed should only show results that match both the filter and the search query.
 - All components should be accessible via keyboard navigation and screen readers. Use appropriate ARIA attributes and roles to ensure that the feed is fully accessible.
 - All interface components should be below the heading of the section and above the feed itself in this order: search bar, filter dropdown, sort dropdown.
 - Adjust width of the dropdowns to accommodate the longest option text without truncation or wrapping. Ensure that the dropdowns are aligned with each other and with the search bar.
 
-
-
 #### 5. 📈 Shipment Volume Trend (7-Day)
-A **pure CSS + JS bar chart** (no chart library) showing daily shipment volume for the past 7 days. Bars should be rendered dynamically from data. Include day labels and volume numbers above each bar.
+A **pure CSS + JS bar chart** (Use a custom implementation for the shipment chart. Do not introduce a separate charting library during Step 2.3.) showing daily shipment volume for the past 7 days. Bars should be rendered dynamically from data. Include day labels and volume numbers above each bar.
 
 
 #### 6. 🚚 Carrier Performance Snapshot
@@ -239,6 +239,12 @@ These are stretch goals — implement only after core sections are complete and 
 - **Auto-refresh simulation** — mock a data refresh every 60 seconds with a subtle flash/pulse animation on KPI cards
 - **Exception filter** — a `<select>` dropdown to filter the exceptions feed by region or priority
 - **Collapsible sections** — allow each dashboard section to be collapsed/expanded via a toggle button. Icons should rotate 90 degrees with state changes. (down is expanded, up is collapsed for full width sections.)
+- **Expandable/collapsible behavior on sections with 2 column layout in a row**:
+    - The expand/collapse caret should point to the left on the left column section and point right on right column section.
+    - Expanding collapse the section but to the left for the left column and to the right for the right column section, filling the height to match the other column section. The expanded section should have a subtle shadow to indicate it is above the other section.
+    - collapsed sections should have the caret pointing back to the inside and the label should rotate 90 degrees to be vertical and read from bottom to top. The label should be positioned centered like before and the padding remain the same. It is simply rotating 90 degrees.
+    - The caret should be a be a positioned in centerthe label to appear as a side drawer style toggle and appear above the label. Ensure the posisition relative to the corner of the section and the label is consistent for both left and right column sections, and with same padding and spacing. For example, if the left column is expanded and the right column collapsed, the carets should align and have consistent spacing in their sections.
+    - The remaining column should expand to fill the remaining width of the row and maintain the same height as the expanded section. The expanded section should have a subtle shadow to indicate it is above the other section.
 - **Keyboard navigation** — full tab-through support for the exceptions feed and table rows
 - **Print / Export view** — a `window.print()` triggered button that applies a light-mode print stylesheet
 - **Tooltip on hover** — hovering a KPI card shows a small tooltip with a definition or calculation note
@@ -253,15 +259,15 @@ These are stretch goals — implement only after core sections are complete and 
 
 - **Always write complete, working code** — no placeholder comments like `// add logic here`
 - Use Vue-first solutions before suggesting external libraries
-- Avoid component libraries during Step 2.2
-- Maintain compatibility with a future Vuetify migration during Step 2.3
-- **Respect the file separation** — data stays in `data.js`, styles in `styles.css`, logic in `app.js`
+- Use Vuetify 3 components by default whenever they satisfy a requirement.
+- Prefer Vuetify layouts, navigation components, cards, tables, dialogs, buttons, forms, and icons before building custom alternatives.
+- Preserve the product requirements defined in this brief while leveraging Vuetify conventions.
+
+
+- Respect the Vue project structure — data in src/data, components in src/components, views in src/views, assets in src/assets.
 - **Be opinionated about quality** — if there's a more semantic or accessible way to write something, use it
 - **Mock data should feel real** — use realistic IDs, plausible numbers, and logistics-appropriate terminology
 - **Comment intentionally** — JSDoc on functions, inline comments only where logic is non-obvious
 
 ---
 
-*Brief version 1.1 — FastForward Logistics Prototype Engagement*
-*Stack: HTML / CSS / JS — No frameworks — Claude Sonnet 4.6 / GitHub Copilot*
-```
