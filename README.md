@@ -150,6 +150,7 @@ components            ← import from index.ts only, never from metrics.json dir
 | < 1024px | Not supported |
 
 Mobile layouts are intentionally out of scope for this prototype.
+(Executives pulling up the dashboard during leadership meetings)
 
 ---
 
