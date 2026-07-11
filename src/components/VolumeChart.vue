@@ -1,26 +1,31 @@
 <template>
   <v-card class="dashboard__section" id="section-trend" aria-labelledby="trend-heading">
     <div class="section-header">
-      <h2 class="section-title" id="trend-heading">Shipment Volume</h2>
-      <div class="section-header__actions">
-        <v-select
-          v-model="viewMode"
-          :items="viewOptions"
-          density="compact"
-          variant="outlined"
-          hide-details
-          class="volume-view-select"
-          aria-label="Select chart time range"
-        />
-        <button
-          class="section-toggle"
-          :aria-expanded="isExpanded"
-          :title="isExpanded ? 'Collapse section' : 'Expand section'"
-          @click="isExpanded = !isExpanded"
-        >
-          <span aria-hidden="true">▾</span>
-        </button>
-      </div>
+      <h2 class="section-title" id="trend-heading">
+        Shipment Volume
+        <!--
+          Period chip in the heading mirrors Regional Performance.
+          Closable here because VolumeChart owns the selection state.
+        -->
+        <v-chip
+          v-if="selectedIndex !== null"
+          size="x-small"
+          variant="tonal"
+          color="primary"
+          closable
+          class="section-period-chip"
+          :aria-label="`Active period filter: ${activePeriodLabel}. Click X to clear.`"
+          @click:close="clearSelection"
+        >{{ activePeriodLabel }}</v-chip>
+      </h2>
+      <button
+        class="section-toggle"
+        :aria-expanded="isExpanded"
+        :title="isExpanded ? 'Collapse section' : 'Expand section'"
+        @click="isExpanded = !isExpanded"
+      >
+        <span aria-hidden="true">▾</span>
+      </button>
     </div>
 
     <div
@@ -28,18 +33,18 @@
       :class="{ 'section-content--collapsed': !isExpanded }"
       id="trend-content"
     >
-      <!-- Active period context bar -->
-      <div v-if="selectedIndex !== null" class="volume-period-bar">
-        <v-icon size="14" color="primary" class="volume-period-icon">mdi-calendar-range</v-icon>
-        <span class="volume-period-label">Viewing: {{ activePeriodLabel }}</span>
-        <button
-          class="volume-period-clear"
-          aria-label="Clear period selection and restore full dashboard view"
-          @click="clearSelection"
-        >
-          <v-icon size="14">mdi-close</v-icon>
-          <span class="sr-only">Clear selection</span>
-        </button>
+      <!-- Controls row — styled to match the exceptions controls row -->
+      <div class="volume-controls" role="group" aria-label="Chart time range">
+        <v-select
+          v-model="viewMode"
+          :items="viewOptions"
+          :menu-props="{ class: 'volume-view-menu' }"
+          density="compact"
+          variant="outlined"
+          hide-details
+          class="volume-view-select"
+          aria-label="Select chart time range"
+        />
       </div>
 
       <div

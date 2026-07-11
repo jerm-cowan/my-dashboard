@@ -940,12 +940,14 @@ body {
   Font size and weight match the collapsed field label (.v-field__input).
 */
 .exceptions-sort-menu .v-list-item,
-.exceptions-filter-menu .v-list-item {
+.exceptions-filter-menu .v-list-item,
+.volume-view-menu .v-list-item {
   padding-inline-start: 10px !important;
 }
 
 .exceptions-sort-menu .v-list-item-title,
-.exceptions-filter-menu .v-list-item-title {
+.exceptions-filter-menu .v-list-item-title,
+.volume-view-menu .v-list-item-title {
   font-size: var(--font-size-sm) !important;
   font-weight: 400 !important;
 }
@@ -1093,18 +1095,32 @@ body {
    ============================================================ */
 
 /*
-  View-mode dropdown in the section header. Sized to fit the longest option
-  ("12-Month Trend") without wrapping. Uses the same compact density and
-  field-input overrides as the exceptions controls for visual consistency.
+  Controls row — matches .exceptions-controls layout and density exactly
+  so the dropdown looks identical to the filter/sort dropdowns above it.
 */
-.volume-view-select {
-  flex: 0 0 170px;
+.volume-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+  transition: border-color var(--t-slow);
 }
 
-.volume-view-select .v-field__input {
-  min-height: 28px !important;
-  padding-top:    3px !important;
-  padding-bottom: 3px !important;
+/*
+  Dropdown sized to fit "12-Month Trend" without truncation.
+  Flex-shrink: 0 so it never collapses at narrow widths.
+*/
+.volume-view-select {
+  flex: 0 0 175px;
+}
+
+/* Match the exact field density used by the exceptions controls. */
+.volume-controls .v-field__input {
+  min-height: 32px !important;
+  padding-top:    4px !important;
+  padding-bottom: 4px !important;
+  padding-left:   10px !important;
   font-size: var(--font-size-sm) !important;
 }
 
@@ -1124,57 +1140,9 @@ body {
 }
 
 /*
-  Period context bar — shown below the section header when a bar is selected.
-  Communicates the active period to the user and provides a clear button.
-*/
-.volume-period-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-2) var(--sp-6);
-  border-bottom: 1px solid var(--color-border-subtle);
-  background-color: var(--color-accent-dim);
-  transition: background-color var(--t-slow), border-color var(--t-slow);
-}
-
-.volume-period-icon {
-  flex-shrink: 0;
-}
-
-.volume-period-label {
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  color: var(--color-accent);
-  flex: 1;
-}
-
-.volume-period-clear {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--sp-1);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--color-text-muted);
-  border-radius: var(--radius-sm);
-  transition: color var(--t-fast), background-color var(--t-fast);
-  flex-shrink: 0;
-}
-
-.volume-period-clear:hover {
-  color: var(--color-text-primary);
-  background-color: var(--color-accent-dim);
-}
-
-.volume-period-clear:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-/*
-  Period context chip used in RegionalTable and CarrierGrid section headings.
-  Sits inline with the section title text via the flex gap on .section-title.
+  Period context chip used in section headings (RegionalTable, CarrierGrid,
+  and VolumeChart). Sits inline with the section title text via the flex gap
+  on .section-title. VolumeChart renders it closable; others are read-only.
 */
 .section-period-chip {
   text-transform: none !important;

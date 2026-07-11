@@ -12,6 +12,9 @@
       <!-- KPI Summary Row -->
       <KpiGrid :selected-period="selectedPeriod" />
 
+      <!-- Shipment Volume — global filter, drives period context for sections below -->
+      <VolumeChart @period-selected="onPeriodSelected" />
+
       <!-- Two-column row: Regional Performance (left) + Open Exceptions (right) -->
       <v-row
         class="dashboard__row"
@@ -25,9 +28,6 @@
           <ExceptionsFeed v-model:expanded="exceptionsExpanded" :selected-period="selectedPeriod" />
         </v-col>
       </v-row>
-
-      <!-- Shipment Volume chart with period selection -->
-      <VolumeChart @period-selected="onPeriodSelected" />
 
       <!-- Carrier Performance Snapshot -->
       <CarrierGrid :selected-period="selectedPeriod" />
