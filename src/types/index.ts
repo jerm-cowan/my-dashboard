@@ -93,3 +93,22 @@ export interface CarrierRow {
   onTimeRate: number
   trend: 'up' | 'flat' | 'down'
 }
+
+/** Per-period regional snapshot used when a Shipment Volume bar is selected. */
+export interface RegionalSnapshot {
+  periodKey: string
+  region: string
+  shipments: number
+  onTimeRate: number
+  exceptions: number
+  status: 'on-track' | 'at-risk' | 'critical'
+}
+
+/** Per-period carrier snapshot used when a Shipment Volume bar is selected. */
+export interface CarrierSnapshot {
+  periodKey: string
+  carrier: string
+  shipments: number
+  onTimeRate: number
+  trend: 'up' | 'flat' | 'down'
+}

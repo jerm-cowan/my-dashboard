@@ -50,7 +50,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="(row, i) in regionalData"
+            v-for="(row, i) in activeRegionalData"
             :key="row.region"
             class="animate-in"
             :style="{ '--delay': `${0.08 + i * 0.05}s` }"
@@ -88,11 +88,35 @@
 </template>
 
 <script setup lang="ts">
-import { regionalData, thresholds } from '@/data/index'
-import type { SelectedPeriod } from '@/types/index'
+import { computed } from 'vue'
+import { regionalData, thresholds, regionalSnapshots } from '@/data/index'
+import type { SelectedPeriod, RegionalRow } from '@/types/index'
 
-defineProps<{ expanded: boolean; selectedPeriod?: SelectedPeriod | null }>()
+const props = defineProps<{ expanded: boolean; selectedPeriod?: SelectedPeriod | null }>()
 defineEmits<{ 'update:expanded': [value: boolean] }>()
+
+/** Canonical region display order. */
+const REGION_ORDER = ['Northeast', 'Southeast', 'Midwest', 'Southwest', 'West Coast']
+
+/**
+ * Returns regional rows for the active period when a chart bar is selected,
+ * or the base dataset when no period is active.
+ * Falls back to base data if no snapshot exists for the selected period.
+ */
+const activeRegionalData = computed((): RegionalRow[] => {
+  if (!props.selectedPeriod) return regionalData
+  const snaps = regionalSnapshots
+    .filter(s => s.periodKey === props.selectedPeriod!.periodKey)
+    .sort((a, b) => REGION_ORDER.indexOf(a.region) - REGION_ORDER.indexOf(b.region))
+  if (snaps.length === 0) return regionalData
+  return snaps.map(s => ({
+    region:     s.region,
+    shipments:  s.shipments,
+    onTimeRate: s.onTimeRate,
+    exceptions: s.exceptions,
+    status:     s.status,
+  }))
+})
 
 /**
  * Returns the status class key for an on-time rate value.

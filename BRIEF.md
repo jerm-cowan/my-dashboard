@@ -142,6 +142,10 @@ A single JSON file containing every mock value the dashboard displays. Organized
   "regional": [ ... ],
   "exceptions": [ ... ],
   "volumeTrend": [ ... ],
+  "volumeMonthly": [ ... ],
+  "kpiSnapshots": [ ... ],
+  "regionalSnapshots": [ ... ],
+  "carrierSnapshots": [ ... ],
   "carriers": [ ... ]
 }
 ```
@@ -155,6 +159,8 @@ Business rules that live in data (not components):
 - KPI card labels, sublabels, and value format type
 - Application brand name, page title, and data mode indicator
 - Exception filter region list (derived from `regional` array — never hardcoded separately)
+- Period snapshots for KPI, regional, and carrier sections (keyed by `periodKey`)
+- Exception `dateISO` field used for per-day filtering in the 7-day view
 
 **The mock dataset must support both daily and monthly dashboard views.**
 
@@ -236,7 +242,38 @@ Four stat cards displayed in a horizontal row. Values below are representative e
 | Open Exceptions | 41 | Red if >30, Yellow if 15–30, Green if <15 |
 | Avg Transit Time | 2.3 days | Neutral with trend indicator |
 
-#### 3. 🗺️ Regional Performance Table
+When a Shipment Volume bar is selected the KPI cards update to reflect the snapshot for that period. A period context chip appears inline in the section heading. The **Open Exceptions** card label changes to **Exceptions** when a historical month (outside the current calendar month) is selected.
+
+#### 3. 📈 Shipment Volume
+
+This section sits immediately below the KPI row and acts as the **global period filter** for the entire dashboard. Selecting a bar updates every section below it.
+
+**Chart:** Chart.js bar chart (via vue-chartjs). Only the modules required for a bar chart are registered.
+
+**Section heading:** `SHIPMENT VOLUME`. The section title shows a closable period chip when a bar is selected (e.g. `Mon, Jul 8 ×`). Clicking × clears the selection and restores the full dashboard view.
+
+**Time range dropdown:** A Vuetify `v-select` below the section header (styled consistently with the Exceptions feed controls) lets the user switch between:
+- `7-Day Trend` — daily bars for the trailing 7 days
+- `12-Month Trend` — monthly bars for the trailing 12 months
+
+Switching view modes clears any active selection.
+
+**Bar interaction:**
+- Click a bar — selects that period; bar fills full blue, others dim.
+- Click the selected bar again — deselects (toggle).
+- Click empty canvas space — clears selection.
+- Hover shows a tooltip with the exact shipment count.
+
+**Period propagation:** The selected period is passed as a prop from `DashboardView` to every section component. Each section shows an inline period chip in its section heading and updates its data accordingly.
+
+| Section | 7-Day bar | 12-Month bar |
+|---|---|---|
+| KPI cards | Snapshot values for that day | Snapshot values for that month |
+| Regional table | 5-region snapshot for that day | 5-region snapshot for that month |
+| Exceptions feed | Filters to individual records for that day | Shows aggregate count; scrollable records available for current month only |
+| Carrier cards | 4-carrier snapshot for that day | 4-carrier snapshot for that month |
+
+#### 4. 🗺️ Regional Performance Table
 A styled HTML table showing performance by region. Values below are representative examples — actual mock data is in `src/data/metrics.json`.
 
 | Region | Shipments | On-Time % | Exceptions | Status |
@@ -254,8 +291,10 @@ A styled HTML table showing performance by region. Values below are representati
 
 The exception count and on-time rate for each region must be internally consistent: a Critical region should have the highest exception counts, directly explaining the depressed on-time rate.
 
+When a Shipment Volume bar is selected the table updates to show the regional snapshot for that period. A period chip appears inline in the section heading.
 
-#### 4. ⚠️ Open Exceptions Feed
+
+#### 5. ⚠️ Open / Historical Exceptions Feed
 A scrollable list/feed of active exceptions. Each item should show:
 - Exception ID (e.g. `EXC-00412`)
 - Shipment ID
@@ -263,6 +302,15 @@ A scrollable list/feed of active exceptions. Each item should show:
 - Affected region
 - Time open (e.g. *"14 hrs"*)
 - Priority badge: `HIGH` / `MEDIUM` / `LOW`
+- `dateISO` — ISO date string indicating when the exception was first logged (e.g. `"2026-07-07"`); used to filter the feed when a 7-day bar is selected
+
+**Section heading behavior:**
+- No period selected → **Open Exceptions** + live count badge (e.g. `41`)
+- Current month or 7-day bar selected → **Open Exceptions** + updated count + period chip
+- Historical month selected → **Exceptions** + period chip
+
+**Historical 12-month view:** Individual scrollable records are available only for the current calendar month and the 7-day window. For all other months the feed shows an aggregate summary sourced from `kpiSnapshots`:
+> *"XX exceptions were logged in MM YYYY. Individual records are available for the current month and 7-day window."*
 
 Open Exceptions Feed - Add a sort functionality
 - Match the All Exceptions dropdown format and give label "Sort by: Priority & Time Open" as the default sort option
@@ -281,21 +329,6 @@ Open Exceptions Feed - Filter, sort, and search behavior and location:
 - All interface components should be below the heading of the section and above the feed itself in this order: search bar, filter dropdown, sort dropdown.
 - Adjust width of the dropdowns to accommodate the longest option text without truncation or wrapping. Ensure that the dropdowns are aligned with each other and with the search bar.
 
-#### 5. 📈 Shipment Volume
-
-Use Chart.js with vue-chartjs to render a responsive Vuetify-compatible bar chart.
-
-The section title should be:
-
-SHIPMENT VOLUME
-
-Do not hard-code the date range in the heading. Provide a Vuetify dropdown that lets the user switch between:
-- 7-day trend
-- 12-month trend
-
-Selecting a specific day or month in the chart should update the dashboard context so the KPI cards, regional performance, exceptions feed, and carrier performance reflect the selected period where data is available.
-
-
 #### 6. 🚚 Carrier Performance Snapshot
 A small summary panel showing top 4 carriers. Values below are representative examples — actual mock data is in `src/data/metrics.json`.
 
@@ -305,6 +338,8 @@ A small summary panel showing top 4 carriers. Values below are representative ex
 | XPO Logistics | 1,018 | 89.2% | → |
 | Old Dominion | 876 | 95.1% | ↑ |
 | Estes Express | 654 | 84.7% | ↓ |
+
+When a Shipment Volume bar is selected the carrier cards update to show the per-carrier snapshot for that period. A period chip appears inline in the section heading.
 
 ---
 

@@ -11,8 +11,8 @@
  */
 
 import metrics from './metrics.json'
-export type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, VolumeMonthRow, KpiSnapshot, SelectedPeriod, CarrierRow } from '@/types/index'
-import type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, VolumeMonthRow, KpiSnapshot, SelectedPeriod, CarrierRow } from '@/types/index'
+export type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, VolumeMonthRow, KpiSnapshot, SelectedPeriod, CarrierRow, RegionalSnapshot, CarrierSnapshot } from '@/types/index'
+import type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, VolumeMonthRow, KpiSnapshot, SelectedPeriod, CarrierRow, RegionalSnapshot, CarrierSnapshot } from '@/types/index'
 
 // ─── Application Config ───────────────────────────────────────────────────────
 
@@ -72,3 +72,15 @@ export const kpiSnapshots: KpiSnapshot[] = metrics.kpiSnapshots as KpiSnapshot[]
 
 /** Carrier performance snapshot for top 4 carriers by shipment volume. */
 export const carrierData: CarrierRow[] = metrics.carriers as CarrierRow[]
+
+/**
+ * Per-period regional snapshots (7 daily + 12 monthly × 5 regions = 95 entries).
+ * RegionalTable uses these when a Shipment Volume bar is selected.
+ */
+export const regionalSnapshots: RegionalSnapshot[] = metrics.regionalSnapshots as RegionalSnapshot[]
+
+/**
+ * Per-period carrier snapshots (7 daily + 12 monthly × 4 carriers = 76 entries).
+ * CarrierGrid uses these when a Shipment Volume bar is selected.
+ */
+export const carrierSnapshots: CarrierSnapshot[] = metrics.carrierSnapshots as CarrierSnapshot[]

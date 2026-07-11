@@ -87,7 +87,7 @@ src/
 │   ├── KpiGrid.vue         # KPI section wrapper (4-card grid)
 │   ├── NavBar.vue          # Fixed top nav bar with theme toggle
 │   ├── RegionalTable.vue   # Regional performance table
-│   └── VolumeChart.vue     # 7-day shipment volume bar chart
+│   └── VolumeChart.vue     # Interactive bar chart (Chart.js) with 7-day/12-month toggle and period selection
 ├── data/
 │   ├── metrics.json        # ⭐ Single source of truth for all mock data
 │   └── index.ts            # Imports metrics.json, applies types, re-exports
@@ -126,10 +126,14 @@ components            ← import from index.ts only, never from metrics.json dir
 | `kpiMeta` | Display metadata per KPI: label, sublabel, value format |
 | `kpiTooltips` | Tooltip copy shown on KPI card hover/focus |
 | `thresholds` | Business rule cutoffs (e.g. on-time ≥ 90% = green) |
-| `regional` | Regional performance rows |
-| `exceptions` | Exception feed records |
-| `volumeTrend` | 7-day daily shipment volumes |
-| `carriers` | Carrier snapshot rows |
+| `regional` | Regional performance rows (current snapshot) |
+| `exceptions` | Exception feed records — each includes `dateISO` for period filtering |
+| `volumeTrend` | 7-day daily shipment volumes — each includes `dateISO` |
+| `volumeMonthly` | 12-month shipment volumes with `periodKey` |
+| `kpiSnapshots` | Per-period KPI values (7 daily + 12 monthly) keyed by `periodKey` |
+| `regionalSnapshots` | Per-period regional rows (7 daily + 12 monthly × 5 regions) |
+| `carrierSnapshots` | Per-period carrier rows (7 daily + 12 monthly × 4 carriers) |
+| `carriers` | Carrier performance rows (current snapshot) |
 
 **To update a metric value** — edit `metrics.json`. No component changes required.
 
@@ -152,6 +156,8 @@ Mobile layouts are intentionally out of scope for this prototype.
 ## Features
 
 - **Dark / Light theme toggle** — persisted to `localStorage`; respects OS `prefers-color-scheme` on first visit
+- **Period-selection cross-filtering** — clicking a bar in the Shipment Volume chart sets a dashboard-level period context; KPI cards, Regional Performance, Exceptions feed, and Carrier Performance all update to reflect the selected day or month. A period chip appears in each section heading. Clicking the same bar again or the × on the chip clears the selection.
+- **Exceptions feed heading** — shows **Open Exceptions** with a live count for current-month and 7-day selections; switches to **Exceptions** with a period chip for historical months. Historical months display an aggregate count sourced from `kpiSnapshots`.
 - **Collapsible sections** — all sections collapse; the two-column row uses a side-drawer mode at ≥ 1280px
 - **Exception feed** — real-time search across all fields, filter by region or priority, sort by multiple criteria; all three controls compose together
 - **Auto-refresh simulation** — KPI cards pulse every 60 seconds to simulate a live data tick

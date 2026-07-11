@@ -7,12 +7,29 @@
   >
     <div class="section-header">
       <h2 class="section-title" id="exceptions-heading">
-        Open Exceptions
+        <!--
+          Heading is context-aware:
+          - No selection or current-month period  → "Open Exceptions" + live count badge
+          - Historical month selected             → "Exceptions" + period chip
+          The count badge updates dynamically as the period filter changes,
+          so clicking Jul 7 shows "Open Exceptions 9" not "Open Exceptions 41".
+        -->
+        {{ isCurrentMonthPeriod ? 'Open Exceptions' : 'Exceptions' }}
         <span
+          v-if="isCurrentMonthPeriod"
           class="section-title__count"
-          :aria-label="`${filteredData.length} exceptions`"
+          :aria-label="`${filteredData.length} ${props.selectedPeriod ? 'exceptions' : 'open exceptions'}`"
           aria-live="polite"
         >{{ filteredData.length }}</span>
+        <!-- Period chip shown for ALL selected periods — current month and historical alike -->
+        <v-chip
+          v-if="props.selectedPeriod"
+          size="x-small"
+          variant="tonal"
+          color="primary"
+          class="section-period-chip"
+          :aria-label="`Showing exceptions for ${props.selectedPeriod.label}`"
+        >{{ props.selectedPeriod.label }}</v-chip>
       </h2>
       <button
         class="section-toggle"
@@ -84,9 +101,17 @@
         aria-relevant="additions removals"
       >
         <p v-if="filteredData.length === 0" class="exceptions-empty">
-          {{ props.selectedPeriod
-            ? `No exceptions recorded for ${props.selectedPeriod.label}.`
-            : 'No exceptions match the current filter or search.' }}
+          <template v-if="monthAggregateCount !== null">
+            <strong>{{ monthAggregateCount }}</strong> exceptions were logged in
+            {{ props.selectedPeriod!.label }}.
+            Individual records are available for the current month and 7-day window.
+          </template>
+          <template v-else-if="props.selectedPeriod">
+            No exceptions recorded for {{ props.selectedPeriod.label }}.
+          </template>
+          <template v-else>
+            No exceptions match the current filter or search.
+          </template>
         </p>
 
         <article
@@ -125,7 +150,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { exceptionsData, regionalData } from '@/data/index'
+import { exceptionsData, regionalData, kpiSnapshots } from '@/data/index'
 import type { Exception, SelectedPeriod } from '@/types/index'
 
 const props = defineProps<{ expanded: boolean; selectedPeriod?: SelectedPeriod | null }>()
@@ -163,6 +188,40 @@ const periodBaseData = computed((): Exception[] => {
   if (type === 'day')   return exceptionsData.filter(e => e.dateISO === periodKey)
   if (type === 'month') return exceptionsData.filter(e => e.dateISO.startsWith(periodKey))
   return exceptionsData
+})
+
+/**
+ * ISO month key for the current calendar month (e.g. "2026-07").
+ * Computed dynamically so it stays correct as time passes.
+ */
+const currentMonthKey = computed(() => {
+  const now = new Date()
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+})
+
+/**
+ * True when no period is selected OR the selected period falls within the
+ * current calendar month (daily or monthly bar in the current month).
+ * Controls whether the heading reads "Open Exceptions" vs "Exceptions".
+ */
+const isCurrentMonthPeriod = computed((): boolean => {
+  if (!props.selectedPeriod) return true
+  const { type, periodKey } = props.selectedPeriod
+  if (type === 'month') return periodKey === currentMonthKey.value
+  if (type === 'day')   return periodKey.startsWith(currentMonthKey.value)
+  return false
+})
+
+/**
+ * When a 12-month bar is selected and no individual exception records exist for
+ * that period, return the aggregate count from kpiSnapshots so the empty state
+ * can show a meaningful summary instead of just "no results".
+ */
+const monthAggregateCount = computed((): number | null => {
+  if (!props.selectedPeriod || props.selectedPeriod.type !== 'month') return null
+  if (periodBaseData.value.length > 0) return null   // records exist — no summary needed
+  const snap = kpiSnapshots.find(s => s.periodKey === props.selectedPeriod!.periodKey)
+  return snap?.openExceptions ?? null
 })
 
 /** Sort dropdown items. */

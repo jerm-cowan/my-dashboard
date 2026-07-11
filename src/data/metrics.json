@@ -138,5 +138,219 @@
     { "carrier": "XPO Logistics", "shipments": 1018, "onTimeRate": 89.2, "trend": "flat" },
     { "carrier": "Old Dominion",  "shipments": 876,  "onTimeRate": 95.1, "trend": "up"   },
     { "carrier": "Estes Express", "shipments": 654,  "onTimeRate": 76.4, "trend": "down" }
+  ],
+
+  "regionalSnapshots": [
+    { "periodKey": "2026-07-02", "region": "Northeast",  "shipments": 168, "onTimeRate": 92.9, "exceptions": 1, "status": "on-track" },
+    { "periodKey": "2026-07-02", "region": "Southeast",  "shipments": 138, "onTimeRate": 93.5, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-02", "region": "Midwest",    "shipments": 154, "onTimeRate": 88.3, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-02", "region": "Southwest",  "shipments": 103, "onTimeRate": 95.2, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-02", "region": "West Coast", "shipments": 109, "onTimeRate": 92.5, "exceptions": 0, "status": "on-track" },
+
+    { "periodKey": "2026-07-03", "region": "Northeast",  "shipments": 179, "onTimeRate": 89.4, "exceptions": 1, "status": "at-risk"  },
+    { "periodKey": "2026-07-03", "region": "Southeast",  "shipments": 147, "onTimeRate": 88.4, "exceptions": 1, "status": "at-risk"  },
+    { "periodKey": "2026-07-03", "region": "Midwest",    "shipments": 164, "onTimeRate": 90.2, "exceptions": 1, "status": "on-track" },
+    { "periodKey": "2026-07-03", "region": "Southwest",  "shipments": 110, "onTimeRate": 87.3, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-03", "region": "West Coast", "shipments": 115, "onTimeRate": 93.0, "exceptions": 0, "status": "on-track" },
+
+    { "periodKey": "2026-07-04", "region": "Northeast",  "shipments": 121, "onTimeRate": 90.9, "exceptions": 1, "status": "on-track" },
+    { "periodKey": "2026-07-04", "region": "Southeast",  "shipments": 99,  "onTimeRate": 93.9, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-04", "region": "Midwest",    "shipments": 111, "onTimeRate": 92.8, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-04", "region": "Southwest",  "shipments": 74,  "onTimeRate": 87.8, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-04", "region": "West Coast", "shipments": 78,  "onTimeRate": 91.0, "exceptions": 1, "status": "on-track" },
+
+    { "periodKey": "2026-07-05", "region": "Northeast",  "shipments": 175, "onTimeRate": 87.4, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-05", "region": "Southeast",  "shipments": 143, "onTimeRate": 79.7, "exceptions": 3, "status": "critical" },
+    { "periodKey": "2026-07-05", "region": "Midwest",    "shipments": 160, "onTimeRate": 88.8, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-05", "region": "Southwest",  "shipments": 107, "onTimeRate": 91.6, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-05", "region": "West Coast", "shipments": 113, "onTimeRate": 93.8, "exceptions": 0, "status": "on-track" },
+
+    { "periodKey": "2026-07-06", "region": "Northeast",  "shipments": 78,  "onTimeRate": 94.9, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-06", "region": "Southeast",  "shipments": 64,  "onTimeRate": 90.6, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-06", "region": "Midwest",    "shipments": 72,  "onTimeRate": 87.5, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-06", "region": "Southwest",  "shipments": 48,  "onTimeRate": 83.3, "exceptions": 3, "status": "at-risk"  },
+    { "periodKey": "2026-07-06", "region": "West Coast", "shipments": 50,  "onTimeRate": 93.9, "exceptions": 0, "status": "on-track" },
+
+    { "periodKey": "2026-07-07", "region": "Northeast",  "shipments": 74,  "onTimeRate": 96.0, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-07", "region": "Southeast",  "shipments": 61,  "onTimeRate": 65.6, "exceptions": 7, "status": "critical" },
+    { "periodKey": "2026-07-07", "region": "Midwest",    "shipments": 68,  "onTimeRate": 94.1, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-07", "region": "Southwest",  "shipments": 46,  "onTimeRate": 93.5, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-07", "region": "West Coast", "shipments": 48,  "onTimeRate": 76.6, "exceptions": 2, "status": "critical" },
+
+    { "periodKey": "2026-07-08", "region": "Northeast",  "shipments": 96,  "onTimeRate": 89.6, "exceptions": 1, "status": "at-risk"  },
+    { "periodKey": "2026-07-08", "region": "Southeast",  "shipments": 79,  "onTimeRate": 79.7, "exceptions": 3, "status": "critical" },
+    { "periodKey": "2026-07-08", "region": "Midwest",    "shipments": 88,  "onTimeRate": 92.0, "exceptions": 0, "status": "on-track" },
+    { "periodKey": "2026-07-08", "region": "Southwest",  "shipments": 60,  "onTimeRate": 86.2, "exceptions": 2, "status": "at-risk"  },
+    { "periodKey": "2026-07-08", "region": "West Coast", "shipments": 61,  "onTimeRate": 82.0, "exceptions": 2, "status": "at-risk"  },
+
+    { "periodKey": "2025-08", "region": "Northeast",  "shipments": 3975, "onTimeRate": 94.3, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2025-08", "region": "Southeast",  "shipments": 3253, "onTimeRate": 86.2, "exceptions": 9,  "status": "at-risk"  },
+    { "periodKey": "2025-08", "region": "Midwest",    "shipments": 3639, "onTimeRate": 93.2, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2025-08", "region": "Southwest",  "shipments": 2447, "onTimeRate": 94.1, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2025-08", "region": "West Coast", "shipments": 2576, "onTimeRate": 93.8, "exceptions": 6,  "status": "on-track" },
+
+    { "periodKey": "2025-09", "region": "Northeast",  "shipments": 3690, "onTimeRate": 95.1, "exceptions": 5,  "status": "on-track" },
+    { "periodKey": "2025-09", "region": "Southeast",  "shipments": 3024, "onTimeRate": 87.1, "exceptions": 8,  "status": "at-risk"  },
+    { "periodKey": "2025-09", "region": "Midwest",    "shipments": 3378, "onTimeRate": 93.4, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2025-09", "region": "Southwest",  "shipments": 2272, "onTimeRate": 93.8, "exceptions": 4,  "status": "on-track" },
+    { "periodKey": "2025-09", "region": "West Coast", "shipments": 2386, "onTimeRate": 93.7, "exceptions": 6,  "status": "on-track" },
+
+    { "periodKey": "2025-10", "region": "Northeast",  "shipments": 4304, "onTimeRate": 92.1, "exceptions": 8,  "status": "on-track" },
+    { "periodKey": "2025-10", "region": "Southeast",  "shipments": 3528, "onTimeRate": 83.9, "exceptions": 12, "status": "at-risk"  },
+    { "periodKey": "2025-10", "region": "Midwest",    "shipments": 3941, "onTimeRate": 90.4, "exceptions": 9,  "status": "on-track" },
+    { "periodKey": "2025-10", "region": "Southwest",  "shipments": 2650, "onTimeRate": 91.7, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2025-10", "region": "West Coast", "shipments": 2787, "onTimeRate": 92.5, "exceptions": 6,  "status": "on-track" },
+
+    { "periodKey": "2025-11", "region": "Northeast",  "shipments": 4731, "onTimeRate": 93.4, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2025-11", "region": "Southeast",  "shipments": 3879, "onTimeRate": 84.5, "exceptions": 11, "status": "at-risk"  },
+    { "periodKey": "2025-11", "region": "Midwest",    "shipments": 4332, "onTimeRate": 91.8, "exceptions": 8,  "status": "on-track" },
+    { "periodKey": "2025-11", "region": "Southwest",  "shipments": 2917, "onTimeRate": 92.6, "exceptions": 5,  "status": "on-track" },
+    { "periodKey": "2025-11", "region": "West Coast", "shipments": 3061, "onTimeRate": 93.1, "exceptions": 7,  "status": "on-track" },
+
+    { "periodKey": "2025-12", "region": "Northeast",  "shipments": 3088, "onTimeRate": 91.3, "exceptions": 10, "status": "on-track" },
+    { "periodKey": "2025-12", "region": "Southeast",  "shipments": 2530, "onTimeRate": 77.5, "exceptions": 18, "status": "critical" },
+    { "periodKey": "2025-12", "region": "Midwest",    "shipments": 2826, "onTimeRate": 89.9, "exceptions": 10, "status": "at-risk"  },
+    { "periodKey": "2025-12", "region": "Southwest",  "shipments": 1901, "onTimeRate": 90.5, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2025-12", "region": "West Coast", "shipments": 1995, "onTimeRate": 91.2, "exceptions": 7,  "status": "on-track" },
+
+    { "periodKey": "2026-01", "region": "Northeast",  "shipments": 3446, "onTimeRate": 90.7, "exceptions": 9,  "status": "on-track" },
+    { "periodKey": "2026-01", "region": "Southeast",  "shipments": 2825, "onTimeRate": 76.1, "exceptions": 16, "status": "critical" },
+    { "periodKey": "2026-01", "region": "Midwest",    "shipments": 3156, "onTimeRate": 89.6, "exceptions": 11, "status": "at-risk"  },
+    { "periodKey": "2026-01", "region": "Southwest",  "shipments": 2122, "onTimeRate": 91.8, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-01", "region": "West Coast", "shipments": 2231, "onTimeRate": 92.4, "exceptions": 5,  "status": "on-track" },
+
+    { "periodKey": "2026-02", "region": "Northeast",  "shipments": 3726, "onTimeRate": 93.8, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-02", "region": "Southeast",  "shipments": 3055, "onTimeRate": 83.7, "exceptions": 10, "status": "at-risk"  },
+    { "periodKey": "2026-02", "region": "Midwest",    "shipments": 3412, "onTimeRate": 92.4, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2026-02", "region": "Southwest",  "shipments": 2295, "onTimeRate": 94.3, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-02", "region": "West Coast", "shipments": 2412, "onTimeRate": 94.2, "exceptions": 6,  "status": "on-track" },
+
+    { "periodKey": "2026-03", "region": "Northeast",  "shipments": 4114, "onTimeRate": 95.4, "exceptions": 5,  "status": "on-track" },
+    { "periodKey": "2026-03", "region": "Southeast",  "shipments": 3372, "onTimeRate": 87.2, "exceptions": 8,  "status": "at-risk"  },
+    { "periodKey": "2026-03", "region": "Midwest",    "shipments": 3767, "onTimeRate": 93.7, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-03", "region": "Southwest",  "shipments": 2533, "onTimeRate": 95.3, "exceptions": 4,  "status": "on-track" },
+    { "periodKey": "2026-03", "region": "West Coast", "shipments": 2664, "onTimeRate": 94.4, "exceptions": 5,  "status": "on-track" },
+
+    { "periodKey": "2026-04", "region": "Northeast",  "shipments": 3931, "onTimeRate": 96.2, "exceptions": 4,  "status": "on-track" },
+    { "periodKey": "2026-04", "region": "Southeast",  "shipments": 3223, "onTimeRate": 88.5, "exceptions": 7,  "status": "at-risk"  },
+    { "periodKey": "2026-04", "region": "Midwest",    "shipments": 3600, "onTimeRate": 94.1, "exceptions": 5,  "status": "on-track" },
+    { "periodKey": "2026-04", "region": "Southwest",  "shipments": 2421, "onTimeRate": 95.9, "exceptions": 4,  "status": "on-track" },
+    { "periodKey": "2026-04", "region": "West Coast", "shipments": 2545, "onTimeRate": 95.3, "exceptions": 5,  "status": "on-track" },
+
+    { "periodKey": "2026-05", "region": "Northeast",  "shipments": 4336, "onTimeRate": 93.8, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-05", "region": "Southeast",  "shipments": 3555, "onTimeRate": 84.3, "exceptions": 10, "status": "at-risk"  },
+    { "periodKey": "2026-05", "region": "Midwest",    "shipments": 3971, "onTimeRate": 91.6, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2026-05", "region": "Southwest",  "shipments": 2670, "onTimeRate": 94.2, "exceptions": 5,  "status": "on-track" },
+    { "periodKey": "2026-05", "region": "West Coast", "shipments": 2808, "onTimeRate": 93.6, "exceptions": 5,  "status": "on-track" },
+
+    { "periodKey": "2026-06", "region": "Northeast",  "shipments": 4223, "onTimeRate": 92.9, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2026-06", "region": "Southeast",  "shipments": 3462, "onTimeRate": 80.9, "exceptions": 12, "status": "at-risk"  },
+    { "periodKey": "2026-06", "region": "Midwest",    "shipments": 3868, "onTimeRate": 91.3, "exceptions": 8,  "status": "on-track" },
+    { "periodKey": "2026-06", "region": "Southwest",  "shipments": 2601, "onTimeRate": 92.7, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-06", "region": "West Coast", "shipments": 2736, "onTimeRate": 91.1, "exceptions": 6,  "status": "on-track" },
+
+    { "periodKey": "2026-07", "region": "Northeast",  "shipments": 1204, "onTimeRate": 94.2, "exceptions": 6,  "status": "on-track" },
+    { "periodKey": "2026-07", "region": "Southeast",  "shipments": 987,  "onTimeRate": 74.1, "exceptions": 14, "status": "critical" },
+    { "periodKey": "2026-07", "region": "Midwest",    "shipments": 1103, "onTimeRate": 92.1, "exceptions": 7,  "status": "on-track" },
+    { "periodKey": "2026-07", "region": "Southwest",  "shipments": 743,  "onTimeRate": 85.3, "exceptions": 9,  "status": "at-risk"  },
+    { "periodKey": "2026-07", "region": "West Coast", "shipments": 784,  "onTimeRate": 93.8, "exceptions": 5,  "status": "on-track" }
+  ],
+
+  "carrierSnapshots": [
+    { "periodKey": "2026-07-02", "carrier": "FedEx Freight", "shipments": 173, "onTimeRate": 94.2, "trend": "up"   },
+    { "periodKey": "2026-07-02", "carrier": "XPO Logistics", "shipments": 142, "onTimeRate": 89.4, "trend": "flat" },
+    { "periodKey": "2026-07-02", "carrier": "Old Dominion",  "shipments": 122, "onTimeRate": 96.7, "trend": "up"   },
+    { "periodKey": "2026-07-02", "carrier": "Estes Express", "shipments": 91,  "onTimeRate": 87.9, "trend": "flat" },
+
+    { "periodKey": "2026-07-03", "carrier": "FedEx Freight", "shipments": 184, "onTimeRate": 90.8, "trend": "flat" },
+    { "periodKey": "2026-07-03", "carrier": "XPO Logistics", "shipments": 151, "onTimeRate": 87.4, "trend": "down" },
+    { "periodKey": "2026-07-03", "carrier": "Old Dominion",  "shipments": 130, "onTimeRate": 94.6, "trend": "flat" },
+    { "periodKey": "2026-07-03", "carrier": "Estes Express", "shipments": 97,  "onTimeRate": 85.6, "trend": "down" },
+
+    { "periodKey": "2026-07-04", "carrier": "FedEx Freight", "shipments": 124, "onTimeRate": 93.5, "trend": "up"   },
+    { "periodKey": "2026-07-04", "carrier": "XPO Logistics", "shipments": 102, "onTimeRate": 91.2, "trend": "up"   },
+    { "periodKey": "2026-07-04", "carrier": "Old Dominion",  "shipments": 88,  "onTimeRate": 96.6, "trend": "up"   },
+    { "periodKey": "2026-07-04", "carrier": "Estes Express", "shipments": 66,  "onTimeRate": 84.8, "trend": "flat" },
+
+    { "periodKey": "2026-07-05", "carrier": "FedEx Freight", "shipments": 179, "onTimeRate": 88.3, "trend": "down" },
+    { "periodKey": "2026-07-05", "carrier": "XPO Logistics", "shipments": 147, "onTimeRate": 86.9, "trend": "down" },
+    { "periodKey": "2026-07-05", "carrier": "Old Dominion",  "shipments": 127, "onTimeRate": 93.7, "trend": "flat" },
+    { "periodKey": "2026-07-05", "carrier": "Estes Express", "shipments": 95,  "onTimeRate": 78.9, "trend": "down" },
+
+    { "periodKey": "2026-07-06", "carrier": "FedEx Freight", "shipments": 80,  "onTimeRate": 92.5, "trend": "flat" },
+    { "periodKey": "2026-07-06", "carrier": "XPO Logistics", "shipments": 66,  "onTimeRate": 89.4, "trend": "flat" },
+    { "periodKey": "2026-07-06", "carrier": "Old Dominion",  "shipments": 57,  "onTimeRate": 96.5, "trend": "up"   },
+    { "periodKey": "2026-07-06", "carrier": "Estes Express", "shipments": 42,  "onTimeRate": 83.3, "trend": "flat" },
+
+    { "periodKey": "2026-07-07", "carrier": "FedEx Freight", "shipments": 76,  "onTimeRate": 89.5, "trend": "down" },
+    { "periodKey": "2026-07-07", "carrier": "XPO Logistics", "shipments": 63,  "onTimeRate": 84.1, "trend": "down" },
+    { "periodKey": "2026-07-07", "carrier": "Old Dominion",  "shipments": 54,  "onTimeRate": 92.6, "trend": "flat" },
+    { "periodKey": "2026-07-07", "carrier": "Estes Express", "shipments": 40,  "onTimeRate": 72.5, "trend": "down" },
+
+    { "periodKey": "2026-07-08", "carrier": "FedEx Freight", "shipments": 99,  "onTimeRate": 88.9, "trend": "flat" },
+    { "periodKey": "2026-07-08", "carrier": "XPO Logistics", "shipments": 81,  "onTimeRate": 86.4, "trend": "flat" },
+    { "periodKey": "2026-07-08", "carrier": "Old Dominion",  "shipments": 70,  "onTimeRate": 94.3, "trend": "flat" },
+    { "periodKey": "2026-07-08", "carrier": "Estes Express", "shipments": 52,  "onTimeRate": 75.0, "trend": "down" },
+
+    { "periodKey": "2025-08", "carrier": "FedEx Freight", "shipments": 4084, "onTimeRate": 94.3, "trend": "up"   },
+    { "periodKey": "2025-08", "carrier": "XPO Logistics", "shipments": 3353, "onTimeRate": 90.8, "trend": "flat" },
+    { "periodKey": "2025-08", "carrier": "Old Dominion",  "shipments": 2891, "onTimeRate": 96.2, "trend": "up"   },
+    { "periodKey": "2025-08", "carrier": "Estes Express", "shipments": 2160, "onTimeRate": 84.2, "trend": "flat" },
+
+    { "periodKey": "2025-09", "carrier": "FedEx Freight", "shipments": 3791, "onTimeRate": 93.8, "trend": "up"   },
+    { "periodKey": "2025-09", "carrier": "XPO Logistics", "shipments": 3113, "onTimeRate": 91.2, "trend": "flat" },
+    { "periodKey": "2025-09", "carrier": "Old Dominion",  "shipments": 2684, "onTimeRate": 96.4, "trend": "up"   },
+    { "periodKey": "2025-09", "carrier": "Estes Express", "shipments": 2005, "onTimeRate": 82.7, "trend": "down" },
+
+    { "periodKey": "2025-10", "carrier": "FedEx Freight", "shipments": 4421, "onTimeRate": 91.4, "trend": "flat" },
+    { "periodKey": "2025-10", "carrier": "XPO Logistics", "shipments": 3631, "onTimeRate": 88.7, "trend": "flat" },
+    { "periodKey": "2025-10", "carrier": "Old Dominion",  "shipments": 3130, "onTimeRate": 95.1, "trend": "flat" },
+    { "periodKey": "2025-10", "carrier": "Estes Express", "shipments": 2340, "onTimeRate": 80.3, "trend": "down" },
+
+    { "periodKey": "2025-11", "carrier": "FedEx Freight", "shipments": 4862, "onTimeRate": 92.8, "trend": "flat" },
+    { "periodKey": "2025-11", "carrier": "XPO Logistics", "shipments": 3994, "onTimeRate": 89.4, "trend": "flat" },
+    { "periodKey": "2025-11", "carrier": "Old Dominion",  "shipments": 3441, "onTimeRate": 95.7, "trend": "up"   },
+    { "periodKey": "2025-11", "carrier": "Estes Express", "shipments": 2572, "onTimeRate": 79.2, "trend": "down" },
+
+    { "periodKey": "2025-12", "carrier": "FedEx Freight", "shipments": 3173, "onTimeRate": 90.2, "trend": "down" },
+    { "periodKey": "2025-12", "carrier": "XPO Logistics", "shipments": 2606, "onTimeRate": 87.1, "trend": "down" },
+    { "periodKey": "2025-12", "carrier": "Old Dominion",  "shipments": 2246, "onTimeRate": 93.6, "trend": "down" },
+    { "periodKey": "2025-12", "carrier": "Estes Express", "shipments": 1678, "onTimeRate": 76.8, "trend": "down" },
+
+    { "periodKey": "2026-01", "carrier": "FedEx Freight", "shipments": 3542, "onTimeRate": 89.6, "trend": "flat" },
+    { "periodKey": "2026-01", "carrier": "XPO Logistics", "shipments": 2909, "onTimeRate": 86.4, "trend": "flat" },
+    { "periodKey": "2026-01", "carrier": "Old Dominion",  "shipments": 2508, "onTimeRate": 94.2, "trend": "flat" },
+    { "periodKey": "2026-01", "carrier": "Estes Express", "shipments": 1875, "onTimeRate": 75.1, "trend": "down" },
+
+    { "periodKey": "2026-02", "carrier": "FedEx Freight", "shipments": 3832, "onTimeRate": 93.1, "trend": "up"   },
+    { "periodKey": "2026-02", "carrier": "XPO Logistics", "shipments": 3147, "onTimeRate": 90.3, "trend": "up"   },
+    { "periodKey": "2026-02", "carrier": "Old Dominion",  "shipments": 2712, "onTimeRate": 95.8, "trend": "up"   },
+    { "periodKey": "2026-02", "carrier": "Estes Express", "shipments": 2027, "onTimeRate": 78.6, "trend": "up"   },
+
+    { "periodKey": "2026-03", "carrier": "FedEx Freight", "shipments": 4232, "onTimeRate": 94.6, "trend": "up"   },
+    { "periodKey": "2026-03", "carrier": "XPO Logistics", "shipments": 3476, "onTimeRate": 91.8, "trend": "up"   },
+    { "periodKey": "2026-03", "carrier": "Old Dominion",  "shipments": 2996, "onTimeRate": 96.5, "trend": "up"   },
+    { "periodKey": "2026-03", "carrier": "Estes Express", "shipments": 2238, "onTimeRate": 80.9, "trend": "up"   },
+
+    { "periodKey": "2026-04", "carrier": "FedEx Freight", "shipments": 4042, "onTimeRate": 95.3, "trend": "up"   },
+    { "periodKey": "2026-04", "carrier": "XPO Logistics", "shipments": 3320, "onTimeRate": 92.4, "trend": "flat" },
+    { "periodKey": "2026-04", "carrier": "Old Dominion",  "shipments": 2862, "onTimeRate": 97.1, "trend": "up"   },
+    { "periodKey": "2026-04", "carrier": "Estes Express", "shipments": 2139, "onTimeRate": 82.6, "trend": "flat" },
+
+    { "periodKey": "2026-05", "carrier": "FedEx Freight", "shipments": 4456, "onTimeRate": 93.2, "trend": "flat" },
+    { "periodKey": "2026-05", "carrier": "XPO Logistics", "shipments": 3660, "onTimeRate": 90.8, "trend": "flat" },
+    { "periodKey": "2026-05", "carrier": "Old Dominion",  "shipments": 3154, "onTimeRate": 96.4, "trend": "flat" },
+    { "periodKey": "2026-05", "carrier": "Estes Express", "shipments": 2357, "onTimeRate": 82.1, "trend": "down" },
+
+    { "periodKey": "2026-06", "carrier": "FedEx Freight", "shipments": 4343, "onTimeRate": 91.7, "trend": "down" },
+    { "periodKey": "2026-06", "carrier": "XPO Logistics", "shipments": 3567, "onTimeRate": 89.1, "trend": "down" },
+    { "periodKey": "2026-06", "carrier": "Old Dominion",  "shipments": 3075, "onTimeRate": 95.2, "trend": "flat" },
+    { "periodKey": "2026-06", "carrier": "Estes Express", "shipments": 2297, "onTimeRate": 79.4, "trend": "down" },
+
+    { "periodKey": "2026-07", "carrier": "FedEx Freight", "shipments": 1240, "onTimeRate": 93.5, "trend": "up"   },
+    { "periodKey": "2026-07", "carrier": "XPO Logistics", "shipments": 1018, "onTimeRate": 89.2, "trend": "flat" },
+    { "periodKey": "2026-07", "carrier": "Old Dominion",  "shipments": 876,  "onTimeRate": 95.1, "trend": "up"   },
+    { "periodKey": "2026-07", "carrier": "Estes Express", "shipments": 654,  "onTimeRate": 76.4, "trend": "down" }
   ]
 }
+

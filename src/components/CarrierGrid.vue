@@ -35,7 +35,7 @@
         aria-label="Carrier performance snapshot"
       >
         <v-col
-          v-for="(carrier, i) in carrierData"
+          v-for="(carrier, i) in activeCarrierData"
           :key="carrier.carrier"
           cols="12"
           sm="6"
@@ -76,12 +76,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { carrierData, thresholds } from '@/data/index'
-import type { SelectedPeriod } from '@/types/index'
+import { ref, computed } from 'vue'
+import { carrierData, thresholds, carrierSnapshots } from '@/data/index'
+import type { SelectedPeriod, CarrierRow } from '@/types/index'
 
 const props = defineProps<{ selectedPeriod?: SelectedPeriod | null }>()
 const isExpanded = ref(true)
+
+/** Canonical carrier display order. */
+const CARRIER_ORDER = ['FedEx Freight', 'XPO Logistics', 'Old Dominion', 'Estes Express']
+
+/**
+ * Returns carrier rows for the active period when a chart bar is selected,
+ * or the base dataset when no period is active.
+ */
+const activeCarrierData = computed((): CarrierRow[] => {
+  if (!props.selectedPeriod) return carrierData
+  const snaps = carrierSnapshots
+    .filter(s => s.periodKey === props.selectedPeriod!.periodKey)
+    .sort((a, b) => CARRIER_ORDER.indexOf(a.carrier) - CARRIER_ORDER.indexOf(b.carrier))
+  if (snaps.length === 0) return carrierData
+  return snaps.map(s => ({
+    carrier:    s.carrier,
+    shipments:  s.shipments,
+    onTimeRate: s.onTimeRate,
+    trend:      s.trend,
+  }))
+})
 
 /**
  * Returns the status class key for an on-time rate value.

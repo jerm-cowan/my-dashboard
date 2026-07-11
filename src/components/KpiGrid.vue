@@ -1,7 +1,17 @@
 <template>
   <v-card class="dashboard__section" id="section-kpi" aria-labelledby="kpi-heading">
     <div class="section-header">
-      <h2 class="section-title" id="kpi-heading">Key Performance Indicators</h2>
+      <h2 class="section-title" id="kpi-heading">
+        Key Performance Indicators
+        <v-chip
+          v-if="props.selectedPeriod"
+          size="x-small"
+          variant="tonal"
+          color="primary"
+          class="section-period-chip"
+          :aria-label="`Showing KPIs for ${props.selectedPeriod.label}`"
+        >{{ props.selectedPeriod.label }}</v-chip>
+      </h2>
       <button
         class="section-toggle"
         :aria-expanded="isExpanded"
@@ -113,6 +123,24 @@ const activeKpi = computed(() => {
 const periodLabel = computed(() => props.selectedPeriod?.label ?? null)
 
 /**
+ * Mirrors the same logic used in ExceptionsFeed: true when no period is
+ * selected or the selected period falls within the current calendar month.
+ * Drives the "Open Exceptions" vs "Exceptions" label on the KPI card.
+ */
+const currentMonthKey = computed(() => {
+  const now = new Date()
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+})
+
+const isCurrentMonthPeriod = computed((): boolean => {
+  if (!props.selectedPeriod) return true
+  const { type, periodKey } = props.selectedPeriod
+  if (type === 'month') return periodKey === currentMonthKey.value
+  if (type === 'day')   return periodKey.startsWith(currentMonthKey.value)
+  return false
+})
+
+/**
  * Card definitions derived from metrics.json via kpiMeta.
  * Labels, sublabels, and format types come from data — not hardcoded here.
  * When a period is selected, values and some sublabels reflect the snapshot.
@@ -136,6 +164,7 @@ const cardDefs = computed(() => [
   {
     kpiKey: 'openExceptions',
     ...kpiMeta['openExceptions'],
+    label:       isCurrentMonthPeriod.value ? kpiMeta['openExceptions'].label : 'Exceptions',
     sublabel:    props.selectedPeriod ? 'During Period' : kpiMeta['openExceptions'].sublabel,
     value:       activeKpi.value.openExceptions,
     status:      getKpiStatus('openExceptions', activeKpi.value.openExceptions),
