@@ -12,7 +12,7 @@ FastForward Logistics is a mid-size LTL freight and supply chain company. This d
 - KPI summary cards (shipments, on-time delivery, open exceptions, avg transit time)
 - Regional performance table with status indicators (On Track / At Risk / Critical)
 - Scrollable exceptions feed with real-time search, filter, and sort
-- 7-day shipment volume bar chart
+- Interactive shipment volume chart with 7-day and 12-month views
 - Carrier performance snapshot
 
 All data is mocked. The architecture is structured so a real `fetch()` call to an API can replace the mock dataset without touching any component.
@@ -69,6 +69,8 @@ The app will be available at `http://localhost:5173`.
 | Vue Router | 4.5.x | Client-side routing |
 | MDI Icons | 7.4.x | Icon set via `@mdi/font` |
 | GitHub Copilot | — | AI-assisted development throughout |
+| Chart.js | 4.x | Charting library for data visualization |
+| vue-chartjs | 5.x | Vue wrapper for Chart.js |
 
 ---
 

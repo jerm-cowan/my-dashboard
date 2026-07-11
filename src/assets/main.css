@@ -1089,87 +1089,98 @@ body {
 }
 
 /* ============================================================
-   10. Shipment Volume Bar Chart
+   10. Shipment Volume Chart (Chart.js)
    ============================================================ */
 
-.bar-chart {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--sp-4);
-  padding: var(--sp-6);
-  padding-top: var(--sp-4);
+/*
+  View-mode dropdown in the section header. Sized to fit the longest option
+  ("12-Month Trend") without wrapping. Uses the same compact density and
+  field-input overrides as the exceptions controls for visual consistency.
+*/
+.volume-view-select {
+  flex: 0 0 170px;
 }
 
-.bar-chart__group {
-  flex: 1;
+.volume-view-select .v-field__input {
+  min-height: 28px !important;
+  padding-top:    3px !important;
+  padding-bottom: 3px !important;
+  font-size: var(--font-size-sm) !important;
+}
+
+/*
+  Chart.js canvas wrapper. Explicit height is required when
+  maintainAspectRatio: false is set in the Chart.js options.
+*/
+.volume-chart-container {
+  position: relative;
+  height: 220px;
+  padding: var(--sp-4) var(--sp-6) var(--sp-6);
+}
+
+/* Indicate the chart is interactive */
+.volume-chart-container canvas {
+  cursor: pointer;
+}
+
+/*
+  Period context bar — shown below the section header when a bar is selected.
+  Communicates the active period to the user and provides a clear button.
+*/
+.volume-period-bar {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+  background-color: var(--color-accent-dim);
+  transition: background-color var(--t-slow), border-color var(--t-slow);
 }
 
-.bar-chart__value {
+.volume-period-icon {
+  flex-shrink: 0;
+}
+
+.volume-period-label {
   font-size: var(--font-size-xs);
-  font-weight: 700;
-  color: var(--color-text-muted);
-  margin-bottom: var(--sp-2);
-  font-variant-numeric: tabular-nums;
-  transition: color var(--t-slow);
-}
-
-.bar-chart__bar {
-  width: 100%;
-  max-width: 72px;
-  /* !important prevents Vuetify v-card color context from overriding the gradient */
-  background: linear-gradient(to top, #1e40af, var(--color-accent)) !important;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  min-height: 4px;
-  transform-origin: bottom center;
-  animation: bar-grow 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: var(--bar-delay, 0s);
-  transition: max-width 0.2s;
-}
-
-@keyframes bar-grow {
-  from { transform: scaleY(0); }
-  to   { transform: scaleY(1); }
-}
-
-/* Today's bar highlighted */
-.bar-chart__group--today .bar-chart__bar {
-  background: linear-gradient(to top, #1d4ed8, #60a5fa) !important;
-  box-shadow: 0 0 14px var(--color-accent-glow);
-}
-
-.bar-chart__group--today .bar-chart__value {
+  font-weight: 600;
   color: var(--color-accent);
+  flex: 1;
 }
 
-.bar-chart__day-label {
+.volume-period-clear {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-top: var(--sp-2);
-  padding-top: var(--sp-2);
-  border-top: 1px solid var(--color-border);
-  width: 100%;
-  transition: border-color var(--t-slow);
-}
-
-.bar-chart__day {
-  font-size: var(--font-size-xs);
-  font-weight: 700;
+  justify-content: center;
+  padding: var(--sp-1);
+  border: none;
+  background: transparent;
+  cursor: pointer;
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  transition: color var(--t-slow);
+  border-radius: var(--radius-sm);
+  transition: color var(--t-fast), background-color var(--t-fast);
+  flex-shrink: 0;
 }
 
-.bar-chart__date {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-faint);
-  margin-top: 2px;
-  transition: color var(--t-slow);
+.volume-period-clear:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-accent-dim);
+}
+
+.volume-period-clear:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/*
+  Period context chip used in RegionalTable and CarrierGrid section headings.
+  Sits inline with the section title text via the flex gap on .section-title.
+*/
+.section-period-chip {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: var(--font-size-2xs) !important;
+  font-weight: 600 !important;
 }
 
 /* ============================================================

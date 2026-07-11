@@ -84,7 +84,9 @@
         aria-relevant="additions removals"
       >
         <p v-if="filteredData.length === 0" class="exceptions-empty">
-          No exceptions match the current filter or search.
+          {{ props.selectedPeriod
+            ? `No exceptions recorded for ${props.selectedPeriod.label}.`
+            : 'No exceptions match the current filter or search.' }}
         </p>
 
         <article
@@ -124,9 +126,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { exceptionsData, regionalData } from '@/data/index'
-import type { Exception } from '@/types/index'
+import type { Exception, SelectedPeriod } from '@/types/index'
 
-defineProps<{ expanded: boolean }>()
+const props = defineProps<{ expanded: boolean; selectedPeriod?: SelectedPeriod | null }>()
 defineEmits<{ 'update:expanded': [value: boolean] }>()
 
 const searchQuery = ref('')
@@ -148,6 +150,21 @@ const filterItems = [
   ...regionalData.map(r => ({ title: r.region, value: `region-${r.region}` })),
 ]
 
+/**
+ * Base exception set for the active period.
+ * When a period is selected, only exceptions whose dateISO matches are included.
+ * For a monthly period, all exceptions whose dateISO starts with the month key
+ * are included (e.g. "2026-07" matches "2026-07-05").
+ * When no period is active the full dataset is used.
+ */
+const periodBaseData = computed((): Exception[] => {
+  if (!props.selectedPeriod) return exceptionsData
+  const { type, periodKey } = props.selectedPeriod
+  if (type === 'day')   return exceptionsData.filter(e => e.dateISO === periodKey)
+  if (type === 'month') return exceptionsData.filter(e => e.dateISO.startsWith(periodKey))
+  return exceptionsData
+})
+
 /** Sort dropdown items. */
 const sortItems = [
   { title: 'Priority & Time Open', value: 'priority-time' },
@@ -157,9 +174,9 @@ const sortItems = [
   { title: 'Region', value: 'region' },
 ]
 
-/** Applies current filter, search, and sort state to the exceptions dataset. */
+/** Applies current filter, search, and sort state to the period-filtered base. */
 const filteredData = computed((): Exception[] => {
-  let data = [...exceptionsData]
+  let data = [...periodBaseData.value]
 
   // 1. Apply dropdown filter (region or priority)
   if (filterValue.value !== 'all') {

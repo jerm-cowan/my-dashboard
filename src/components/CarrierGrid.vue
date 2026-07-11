@@ -1,7 +1,17 @@
 <template>
   <v-card class="dashboard__section" id="section-carriers" aria-labelledby="carriers-heading">
     <div class="section-header">
-      <h2 class="section-title" id="carriers-heading">Carrier Performance</h2>
+      <h2 class="section-title" id="carriers-heading">
+        Carrier Performance
+        <v-chip
+          v-if="props.selectedPeriod"
+          size="x-small"
+          variant="tonal"
+          color="primary"
+          class="section-period-chip"
+          aria-label="Period context"
+        >{{ props.selectedPeriod.label }}</v-chip>
+      </h2>
       <button
         class="section-toggle"
         :aria-expanded="isExpanded"
@@ -68,7 +78,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { carrierData, thresholds } from '@/data/index'
+import type { SelectedPeriod } from '@/types/index'
 
+const props = defineProps<{ selectedPeriod?: SelectedPeriod | null }>()
 const isExpanded = ref(true)
 
 /**

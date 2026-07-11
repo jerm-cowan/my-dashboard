@@ -6,7 +6,17 @@
     height="100%"
   >
     <div class="section-header">
-      <h2 class="section-title" id="regional-heading">Regional Performance</h2>
+      <h2 class="section-title" id="regional-heading">
+        Regional Performance
+        <v-chip
+          v-if="selectedPeriod"
+          size="x-small"
+          variant="tonal"
+          color="primary"
+          class="section-period-chip"
+          aria-label="Period context"
+        >{{ selectedPeriod.label }}</v-chip>
+      </h2>
       <button
         class="section-toggle"
         :aria-expanded="expanded"
@@ -79,8 +89,9 @@
 
 <script setup lang="ts">
 import { regionalData, thresholds } from '@/data/index'
+import type { SelectedPeriod } from '@/types/index'
 
-defineProps<{ expanded: boolean }>()
+defineProps<{ expanded: boolean; selectedPeriod?: SelectedPeriod | null }>()
 defineEmits<{ 'update:expanded': [value: boolean] }>()
 
 /**

@@ -68,6 +68,8 @@ The dashboard must feel **credible and complete** — not a demo skeleton. Use r
 - Vue Router
 - Vuetify 3
 - GitHub Copilot
+- Chart.js
+- vue-chartjs
 
 ### Expected Project Structure
 
@@ -153,6 +155,18 @@ Business rules that live in data (not components):
 - KPI card labels, sublabels, and value format type
 - Application brand name, page title, and data mode indicator
 - Exception filter region list (derived from `regional` array — never hardcoded separately)
+
+**The mock dataset must support both daily and monthly dashboard views.**
+
+`src/data/metrics.json` should include:
+- 7-day shipment volume data
+- 12-month shipment volume data
+- period-specific KPI values
+- period-specific regional performance
+- period-specific exceptions
+- period-specific carrier performance
+
+The selected chart period should act as a dashboard-level filter.
 
 ### HTML Guidelines
 - Use semantic HTML5 elements (`<main>`, `<section>`, `<header>`, `<nav>`, `<article>`)
@@ -267,8 +281,19 @@ Open Exceptions Feed - Filter, sort, and search behavior and location:
 - All interface components should be below the heading of the section and above the feed itself in this order: search bar, filter dropdown, sort dropdown.
 - Adjust width of the dropdowns to accommodate the longest option text without truncation or wrapping. Ensure that the dropdowns are aligned with each other and with the search bar.
 
-#### 5. 📈 Shipment Volume Trend (7-Day)
-A **pure CSS + JS bar chart** (Use a custom implementation for the shipment chart. Do not introduce a separate charting library during Step 2.3.) showing daily shipment volume for the past 7 days. Bars should be rendered dynamically from data. Include day labels and volume numbers above each bar.
+#### 5. 📈 Shipment Volume
+
+Use Chart.js with vue-chartjs to render a responsive Vuetify-compatible bar chart.
+
+The section title should be:
+
+SHIPMENT VOLUME
+
+Do not hard-code the date range in the heading. Provide a Vuetify dropdown that lets the user switch between:
+- 7-day trend
+- 12-month trend
+
+Selecting a specific day or month in the chart should update the dashboard context so the KPI cards, regional performance, exceptions feed, and carrier performance reflect the selected period where data is available.
 
 
 #### 6. 🚚 Carrier Performance Snapshot

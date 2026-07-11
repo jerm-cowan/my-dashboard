@@ -56,7 +56,10 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import KpiCard from './KpiCard.vue'
-import { kpiData, kpiTooltips, kpiMeta, thresholds } from '@/data/index'
+import { kpiData, kpiTooltips, kpiMeta, thresholds, kpiSnapshots } from '@/data/index'
+import type { SelectedPeriod } from '@/types/index'
+
+const props = defineProps<{ selectedPeriod?: SelectedPeriod | null }>()
 
 const isExpanded = ref(true)
 const refreshing = ref(false)
@@ -90,37 +93,61 @@ function getKpiStatus(key: string, value: number): 'success' | 'warning' | 'dang
 }
 
 /**
+ * KPI values sourced from the matching period snapshot when a chart bar is
+ * selected, or from the live kpiData when no period is active.
+ */
+const activeKpi = computed(() => {
+  if (!props.selectedPeriod) return kpiData
+  const snap = kpiSnapshots.find(s => s.periodKey === props.selectedPeriod!.periodKey)
+  if (!snap) return kpiData
+  return {
+    totalShipmentsMTD:   snap.totalShipments,
+    onTimeDeliveryRate:  snap.onTimeDeliveryRate,
+    openExceptions:      snap.openExceptions,
+    avgTransitTime:      snap.avgTransitTime,
+    avgTransitTimeTrend: kpiData.avgTransitTimeTrend,
+  }
+})
+
+/** Sublabel override when a period is active. */
+const periodLabel = computed(() => props.selectedPeriod?.label ?? null)
+
+/**
  * Card definitions derived from metrics.json via kpiMeta.
  * Labels, sublabels, and format types come from data — not hardcoded here.
+ * When a period is selected, values and some sublabels reflect the snapshot.
  */
 const cardDefs = computed(() => [
   {
     kpiKey: 'totalShipmentsMTD',
     ...kpiMeta['totalShipmentsMTD'],
-    value: kpiData.totalShipmentsMTD,
-    status: getKpiStatus('totalShipmentsMTD', kpiData.totalShipmentsMTD),
+    sublabel:    periodLabel.value ?? kpiMeta['totalShipmentsMTD'].sublabel,
+    value:       activeKpi.value.totalShipmentsMTD,
+    status:      getKpiStatus('totalShipmentsMTD', activeKpi.value.totalShipmentsMTD),
     tooltipText: kpiTooltips['totalShipmentsMTD'],
   },
   {
     kpiKey: 'onTimeDeliveryRate',
     ...kpiMeta['onTimeDeliveryRate'],
-    value: kpiData.onTimeDeliveryRate,
-    status: getKpiStatus('onTimeDeliveryRate', kpiData.onTimeDeliveryRate),
+    value:       activeKpi.value.onTimeDeliveryRate,
+    status:      getKpiStatus('onTimeDeliveryRate', activeKpi.value.onTimeDeliveryRate),
     tooltipText: kpiTooltips['onTimeDeliveryRate'],
   },
   {
     kpiKey: 'openExceptions',
     ...kpiMeta['openExceptions'],
-    value: kpiData.openExceptions,
-    status: getKpiStatus('openExceptions', kpiData.openExceptions),
+    sublabel:    props.selectedPeriod ? 'During Period' : kpiMeta['openExceptions'].sublabel,
+    value:       activeKpi.value.openExceptions,
+    status:      getKpiStatus('openExceptions', activeKpi.value.openExceptions),
     tooltipText: kpiTooltips['openExceptions'],
   },
   {
     kpiKey: 'avgTransitTime',
     ...kpiMeta['avgTransitTime'],
-    value: kpiData.avgTransitTime,
-    status: getKpiStatus('avgTransitTime', kpiData.avgTransitTime),
-    trend: kpiData.avgTransitTimeTrend,
+    sublabel:    periodLabel.value ?? kpiMeta['avgTransitTime'].sublabel,
+    value:       activeKpi.value.avgTransitTime,
+    status:      getKpiStatus('avgTransitTime', activeKpi.value.avgTransitTime),
+    trend:       activeKpi.value.avgTransitTimeTrend,
     tooltipText: kpiTooltips['avgTransitTime'],
   },
 ])

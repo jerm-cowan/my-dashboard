@@ -47,13 +47,44 @@ export interface Exception {
   type: string
   region: string
   hoursOpen: number
+  /** ISO date string when the exception was first logged (e.g. "2026-07-07"). */
+  dateISO: string
   priority: 'HIGH' | 'MEDIUM' | 'LOW'
 }
 
 export interface VolumeTrendDay {
   day: string
   date: string
+  dateISO: string
   volume: number
+}
+
+export interface VolumeMonthRow {
+  month: string
+  year: number
+  periodKey: string
+  volume: number
+}
+
+export interface KpiSnapshot {
+  periodKey: string
+  totalShipments: number
+  onTimeDeliveryRate: number
+  openExceptions: number
+  avgTransitTime: number
+}
+
+/**
+ * A period selected by clicking a bar in the Shipment Volume chart.
+ * Passed from DashboardView down to all section components so they
+ * can display context-aware data for the selected day or month.
+ */
+export interface SelectedPeriod {
+  type: 'day' | 'month'
+  /** ISO date string: "2026-07-08" for daily, "2026-07" for monthly. */
+  periodKey: string
+  /** Human-readable label shown in context pills, e.g. "Jul 8" or "Jul 2026". */
+  label: string
 }
 
 export interface CarrierRow {

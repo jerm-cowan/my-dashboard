@@ -10,7 +10,7 @@
       aria-label="Operations Dashboard"
     >
       <!-- KPI Summary Row -->
-      <KpiGrid />
+      <KpiGrid :selected-period="selectedPeriod" />
 
       <!-- Two-column row: Regional Performance (left) + Open Exceptions (right) -->
       <v-row
@@ -19,18 +19,18 @@
         no-gutters
       >
         <v-col class="dashboard__col-left">
-          <RegionalTable v-model:expanded="regionalExpanded" />
+          <RegionalTable v-model:expanded="regionalExpanded" :selected-period="selectedPeriod" />
         </v-col>
         <v-col class="dashboard__col-right">
-          <ExceptionsFeed v-model:expanded="exceptionsExpanded" />
+          <ExceptionsFeed v-model:expanded="exceptionsExpanded" :selected-period="selectedPeriod" />
         </v-col>
       </v-row>
 
-      <!-- Shipment Volume 7-Day Trend -->
-      <VolumeChart />
+      <!-- Shipment Volume chart with period selection -->
+      <VolumeChart @period-selected="onPeriodSelected" />
 
       <!-- Carrier Performance Snapshot -->
-      <CarrierGrid />
+      <CarrierGrid :selected-period="selectedPeriod" />
     </v-container>
   </v-main>
 
@@ -54,9 +54,22 @@ import RegionalTable from '@/components/RegionalTable.vue'
 import ExceptionsFeed from '@/components/ExceptionsFeed.vue'
 import VolumeChart from '@/components/VolumeChart.vue'
 import CarrierGrid from '@/components/CarrierGrid.vue'
+import type { SelectedPeriod } from '@/types/index'
 
-const regionalExpanded = ref(true)
+const regionalExpanded   = ref(true)
 const exceptionsExpanded = ref(true)
+
+/**
+ * The period currently selected in the Shipment Volume chart.
+ * Passed as a prop to every dashboard section so they can display
+ * context-aware data without a global state library.
+ */
+const selectedPeriod = ref<SelectedPeriod | null>(null)
+
+/** Receives the emitted period from VolumeChart and stores it. */
+function onPeriodSelected(period: SelectedPeriod | null) {
+  selectedPeriod.value = period
+}
 
 /**
  * Returns the drawer modifier class for the 2-column row based on which panel

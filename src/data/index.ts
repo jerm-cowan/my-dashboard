@@ -11,8 +11,8 @@
  */
 
 import metrics from './metrics.json'
-export type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, CarrierRow } from '@/types/index'
-import type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, CarrierRow } from '@/types/index'
+export type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, VolumeMonthRow, KpiSnapshot, SelectedPeriod, CarrierRow } from '@/types/index'
+import type { AppConfig, KpiMetaEntry, Thresholds, KpiData, RegionalRow, Exception, VolumeTrendDay, VolumeMonthRow, KpiSnapshot, SelectedPeriod, CarrierRow } from '@/types/index'
 
 // ─── Application Config ───────────────────────────────────────────────────────
 
@@ -57,7 +57,16 @@ export const exceptionsData: Exception[] = metrics.exceptions as Exception[]
 // ─── Volume Trend Data ────────────────────────────────────────────────────────
 
 /** Daily shipment volume for the past 7 days, ordered oldest to most recent. */
-export const volumeTrendData: VolumeTrendDay[] = metrics.volumeTrend
+export const volumeTrendData: VolumeTrendDay[] = metrics.volumeTrend as VolumeTrendDay[]
+
+/** Monthly shipment volume for the trailing 12 months, oldest to most recent. */
+export const volumeMonthlyData: VolumeMonthRow[] = metrics.volumeMonthly as VolumeMonthRow[]
+
+/**
+ * KPI snapshots keyed by periodKey (daily ISO date or monthly "YYYY-MM").
+ * Used by KpiGrid to display period-contextual values when a chart bar is selected.
+ */
+export const kpiSnapshots: KpiSnapshot[] = metrics.kpiSnapshots as KpiSnapshot[]
 
 // ─── Carrier Data ─────────────────────────────────────────────────────────────
 
